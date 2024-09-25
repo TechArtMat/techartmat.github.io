@@ -111,38 +111,41 @@ scrym#0422	1.12	1.06</textarea>
             </div>
 
             <div class="tools">
-                <div>
+                <div class="tools-btn-slider-wrapper">
+                    <div id="kdDifferenceDisplay">K/D Trials Difference Between Teams: 0.00</div>
                     <label id="kdDiffLabel">Max K/D Trials Difference:</label>
                     <input type="range" id="kdDiffSlider" min="0" max="2" step="0.01" value="0.5" oninput="updateSliderLabel()" />
                     <span id="kdDiffDisplay">0.50</span>
                 </div>
                 
-                <div class="tools-btn-wrapper">
-                    <div class="tools-btn-container">
-                        <button class="tools-btn" id="resetTeams" onclick="resetTeams()">Reset Teams</button>
+                <div class="tools-btn-container">
+                    <div class="tools-btn-wrapper">
+                        <button id="btnTrials" class="tools-btn" data-type="trials"></button>
                     </div>
-                    
-                
-                    <div class="tools-btn-container">
-                        <button class="tools-btn" id="rerollButton" onclick="rerollTeams(10)">Reroll Teams</button>
-                    </div>
-                    <div class="tools-btn-container">
-                        <button class="tools-btn" onclick="sortTeamsByKD()">Sort by K/D</button>
-                    </div>
-
-                    <div class="radio-buttons tools-btn-container">
-                        <button id="btnTrials" class="tools-btn radio-btn" data-type="trials"></button>
-                        <button id="btnCrucible" class="tools-btn radio-btn" data-type="crucible"></button>
+                    <div class="tools-btn-wrapper">
+                        <button id="btnCrucible" class="tools-btn" data-type="crucible"></button>
                     </div>
                 </div>
-                <div id="kdDifferenceDisplay"></div>
-                <div>
+                    
+                <div class="tools-btn-container">
+                    <div class="tools-btn-wrapper">
+                        <button class="tools-btn" id="resetTeams" onclick="resetTeams()">Reset Teams</button>
+                    </div>
+                    <div class="tools-btn-wrapper">
+                        <button class="tools-btn" id="rerollButton" onclick="rerollTeams(10)">Reroll Teams</button>
+                    </div>
+                    <div class="tools-btn-wrapper">
+                        <button class="tools-btn" onclick="sortTeamsByKD()">Sort by K/D</button>
+                    </div>
+                </div>
+
+                <!-- <div>
                     <h3>Add Player</h3>
                     <input type="text" id="playerName" placeholder="Name">
                     <input type="text" id="playerKDTrials" placeholder="K/D Trials">
                     <input type="text" id="playerKDCrucible" placeholder="K/D Crucible">
                     <button id="addPlayer" onclick="addPlayer()">Add Player</button>
-                </div>
+                </div> -->
             </div>
         </div>  
     </div>

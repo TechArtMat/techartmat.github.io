@@ -1,0 +1,348 @@
+
+body {
+    background-image: url("fullhd.png");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: 1920px 1080px;
+    font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+    display: flex;
+    justify-content: center;
+
+}
+
+/* .player {
+    padding: 5px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    margin: 2px 0;
+}
+.team {
+    margin-bottom: 20px;
+}
+.team-title {
+    font-weight: bold;
+}
+
+#availablePlayers div, #teamA div, #teamB div {
+    padding: 5px;
+    margin: 2px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+#teamA, #teamB {
+    margin-top: 20px;
+} */
+
+.text-h2 {
+    color: rgba(17, 34, 62, 0.6);
+    font-size: 32px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+}
+.availablePlayers-container {
+    max-width: 400px;
+}
+
+.dec-container + #searchPlayerInput, 
+#searchPlayerInput + #availablePlayers, 
+#availablePlayers + #playerBaseInput,
+#teamA + .avgKD, #teamB + .avgKD  {
+    margin-top: 4px;
+}
+
+#playerBaseInput, #searchPlayerInput {
+    font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+    width: 394px;
+    background-color: rgba(92, 92, 92, 0.25);
+    border: 1px #000 solid;
+    /* border-radius: 0px; */
+    backdrop-filter: blur(0.8px);
+    -webkit-backdrop-filter: blur(0.7px);
+    min-height: 40px;
+    /* color: #ffffff; */
+    box-shadow: inset 0px 0px 2px 0px rgb(0 0 0 / 20%);
+}
+
+#playerBaseInput {
+    border-radius: 0;
+    border: 1px solid rgb(0, 0, 0, 0.1); 
+    max-width: 394px;
+    overflow: hidden;
+    outline: none;
+}
+
+#searchPlayerInput {
+    text-align: center;
+    max-width: 394px;
+    border: 1px solid rgb(0, 0, 0, 0.1); 
+    outline: none;
+    /* color: #fff;  */
+}
+
+#searchPlayerInput::placeholder {
+    color: rgba(255, 255, 255, 0.7);  
+}
+
+.teams {
+    /* background-color: #738EA7; */
+    
+}
+
+.team {
+    /* height: 480px; */
+    width: 400px;
+    /* background-color: #A77373; */
+}
+
+.team-wrapper {
+    display: flex;
+}
+
+.team + .team, .tools-btn-container + .tools-btn-container {
+    margin-left: 50px;
+}
+
+.availablePlayers-container + .teams {
+    margin-left: 100px;
+}
+
+.wrapper {
+    display: flex;
+}
+/* .decoration-container {
+}  */
+
+.tools-btn-wrapper {
+    display: flex;
+
+}
+
+.tools-btn {
+    width: 80px;
+    height: 80px;
+    border: 2px solid black;
+    background-color: #A5A5A5;
+}
+
+/* .tools-btn {
+    background-color: #c7c7c7;
+} */
+
+#btnTrials, #btnCrucible {
+    background-repeat: no-repeat;
+    background-position: center;
+    padding: 2px;
+}
+
+#btnTrials {
+    background-image: url('emblem_osiris.png');
+    background-size: 70px;
+    background-color: #FFD45E;
+}
+
+#btnCrucible {
+    background-image: url('emblem_crucible.png');
+    background-size: 65px;
+    background-color: #FF4646;
+}
+
+#btnTrials.checked {
+    background-color: hsl(44, 90%, 70%);
+}
+
+#btnCrucible.checked {
+    background-color: hsl(0, 100%, 70%);
+}
+
+
+.dec-container_s {
+    height: 3px;    
+}
+
+.dec-container_b {
+    height: 21px;    
+}
+
+.dec-color_avl-pl_s {
+    background-color: #342E36;
+}
+
+.dec-color_avl-pl_b {
+    background-color: #A7A896;
+}
+.dec-color_alpha_s {
+    background-color: #8CB88E;
+}
+.dec-color_alpha_b {
+    background-color: #11223E;
+}
+.dec-color_bravo_s {
+    background-color: #2F2F39;
+}
+.dec-color_bravo_b {
+    background-color: #C94B22;
+}
+
+#availablePlayers {
+    width: 400px;
+    height: 600px;
+    max-height: 700px;
+    overflow-y:scroll;
+    /* border: 1px solid #ccc; */
+    /* background-color: #f9f9f9; */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+
+#availablePlayers::-webkit-scrollbar {
+    display: none;  /* Для Chrome, Safari и других WebKit-браузеров: скрываем полосу прокрутки */
+}
+
+.kd-trials, .kd-crucible {
+    display: block;
+    width: 40px;
+}
+
+.player-card + .player-card, .slot + .slot {
+    margin-top: 8px;
+}
+
+.player-card, .avgKD {
+    display: flex;
+    align-items: center;
+    background-color: rgba(92, 92, 92, 0.25);
+    backdrop-filter: blur(0.8px);
+    color: #FFFFFF;
+}
+
+.slot {
+    max-width: 400px;
+    height: 38px;
+    max-height: 38px;
+    border: 1px rgba(0, 0, 0, 0.103) solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: visible;  
+}
+
+.slot.filled {
+    visibility: hidden;  /* Показываем слот, когда он заполнен */
+    border: none;  /* Убираем границу, если слот заполнен */
+}
+
+.player-card {
+    max-width: 400px;
+    max-height: 40px;
+}
+
+.avgKD {
+    max-width: 400px;
+    max-height: 20px;
+}
+
+.avgKD-wrapper {
+    display: flex;
+    margin-left: auto;
+    margin-right: 40px;
+    text-align: center;
+    /* align-items: center; */
+    /* height: inherit; */
+    /* display: flex; */
+    /* flex-direction: row; */
+    /* margin-left: auto; */
+}
+
+.player-card button {
+    width: 40px;
+}
+
+.player-avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #738EA7;
+    grid-area: a;
+    float: left;
+}
+
+.player-avatar-blue {
+    background-color: #738EA7;
+}
+
+.player-avatar-red {
+    background-color: #A77373;
+}
+
+.player-info {
+    grid-area: n;
+}
+
+.player-decoration, .player-decoration-s {
+    width: 2px;
+    background-color: rgba(53, 53, 53, 0.5);
+    /* opacity: 0.5; */
+    height: 40px;
+}
+
+.player-decoration {
+    height: 40px;
+}
+
+.player-decoration-s {
+    height: 20px;
+}
+
+.player-name {
+    color: #FFFFFF;
+    font-size: 16px;
+    margin-left: 10px;
+}
+
+.player-clan {
+    color: #ffffff;
+    font-size: 14px;
+    opacity: 0.5;
+    
+}
+
+.player-kd {
+    align-items: center;
+    height: inherit;
+    display: flex;
+    flex-direction: row;
+    margin-left: auto;
+}
+
+.player-kd span {
+    text-align: center;
+}
+
+.player-switch {
+    align-content: center;
+    height: 40px;
+    width: 40px;
+    float: right;
+    grid-area: b;
+    text-align: center;
+}
+
+.switch-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #555;
+    cursor: pointer;
+    font-weight: bold;
+    
+}
+
+.switch-btn:hover {
+    color: #333;
+}
+
+/* #sortByTrials {
+
+} */

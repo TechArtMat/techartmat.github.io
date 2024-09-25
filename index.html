@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
+    <title>Player Selection</title>
+</head>
+<body>
+    <!-- <div class="player-card">
+        <div class="player-avatar"></div>
+        <div class="player-info">
+            <span class="player-name">garrus#8697</span>
+            <span class="player-clan">[Sky]</span>
+        </div>
+        <div class="player-kd">
+            <div class="player-decoration"></div>
+            <span class="kd-trials">1.43</span>
+            <div class="player-decoration"></div>
+            <span class="kd-crucible">1.5</span>
+            <div class="player-decoration"></div>
+        </div>
+        <div class="player-switch">
+            <button class="switch-btn">&#8646;</button>
+        </div>
+    </div>    -->
+    <div class="wrapper">
+        <div class="availablePlayers-container">        
+            <h2 class="text-h2">AVAILABLE PLAYERS</h2>
+            <div class="dec-container">
+                <div class="dec-container_s dec-color_avl-pl_s"></div>
+                <div class="dec-container_b dec-color_avl-pl_b"></div>
+            </div>        
+            <input type="text" id="searchPlayerInput" placeholder="Search by name" oninput="filterAvailablePlayers()" />
+            <div id="availablePlayers"></div>
+            <textarea id="playerBaseInput" placeholder="Paste your player base here...">
+garrus#8697	1.43	1.5
+red_threat#8858	1.29	1.54
+alter#8512	1.22	1.39
+ll_L1ZARD_ll#3003	1.13	1.39
+lev1than#5504	1.01	1.35
+sharic#3479	0.99	1.13
+excelsior#0210	0.99	1.22
+123#7424	0.96	0.95
+TpoTpo#5108	0.94	1.06
+RedCatz#9878	0.87	1.01
+tubus#8478	0.75	0.9
+ember/-_-/#9250	0.57	0.79
+Чебупеля_Бл#6487	0.66	0.99
+freelancer_kabrinski#8782	0.59	0.8
+Diadelliya#4036	0.45	0.66
+AnnaFox#4105	0.36	0.83
+dilfin4ik_#4305	0.2	0.49
+sergik	1.43	1.25
+scrym#0422	1.12	1.06</textarea>
+            <button id="importPlayers" onclick="importPlayers()">Import Players</button>
+        </div>
+
+        <div class="teams">
+            <div class="team-wrapper">
+                <div class="team">
+                    <h2 class="text-h2">ALPHA</h2>
+                    <div class="dec-container">
+                        <div class="dec-container_s dec-color_alpha_s"></div>
+                        <div class="dec-container_b dec-color_alpha_b"></div>
+                    </div> 
+                    <div id="teamA" class="team">
+                        <div class="slot" id="slotA1"></div>
+                        <div class="slot" id="slotA2"></div>
+                        <div class="slot" id="slotA3"></div>
+                        <div class="slot" id="slotA4"></div>
+                        <div class="slot" id="slotA5"></div>
+                        <div class="slot" id="slotA6"></div>
+                    </div>
+                    <div class="avgKD">
+                        <div class="avgKD-wrapper">
+                            <div class="player-decoration-s"></div>
+                            <span id="avgKDTrialsA" class="kd-trials">0.00</span>
+                            <div class="player-decoration-s"></div>
+                            <span id="avgKDCrucibleA" class="kd-crucible">0.00</span>
+                            <div class="player-decoration-s"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team">
+                    <h2 class="text-h2">BRAVO</h2>
+                    <div class="dec-container">
+                        <div class="dec-container_s dec-color_bravo_s"></div>
+                        <div class="dec-container_b dec-color_bravo_b"></div>
+                    </div> 
+                    <div id="teamB" class="team">
+                        <div class="slot" id="slotB1"></div>
+                        <div class="slot" id="slotB2"></div>
+                        <div class="slot" id="slotB3"></div>
+                        <div class="slot" id="slotB4"></div>
+                        <div class="slot" id="slotB5"></div>
+                        <div class="slot" id="slotB6"></div>
+                    </div>
+                    <div class="avgKD">
+                        <div class="avgKD-wrapper">
+                            <div class="player-decoration-s"></div>
+                            <span id="avgKDTrialsB" class="kd-trials">0.00</span>
+                            <div class="player-decoration-s"></div>
+                            <span id="avgKDCrucibleB" class="kd-crucible">0.00</span>
+                            <div class="player-decoration-s"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tools">
+                <div>
+                    <label id="kdDiffLabel">Max K/D Trials Difference:</label>
+                    <input type="range" id="kdDiffSlider" min="0" max="2" step="0.01" value="0.5" oninput="updateSliderLabel()" />
+                    <span id="kdDiffDisplay">0.50</span>
+                </div>
+                
+                <div class="tools-btn-wrapper">
+                    <div class="tools-btn-container">
+                        <button class="tools-btn" id="resetTeams" onclick="resetTeams()">Reset Teams</button>
+                    </div>
+                    
+                
+                    <div class="tools-btn-container">
+                        <button class="tools-btn" id="rerollButton" onclick="rerollTeams(10)">Reroll Teams</button>
+                    </div>
+                    <div class="tools-btn-container">
+                        <button class="tools-btn" onclick="sortTeamsByKD()">Sort by K/D</button>
+                    </div>
+
+                    <div class="radio-buttons tools-btn-container">
+                        <button id="btnTrials" class="tools-btn radio-btn" data-type="trials"></button>
+                        <button id="btnCrucible" class="tools-btn radio-btn" data-type="crucible"></button>
+                    </div>
+                </div>
+                <div id="kdDifferenceDisplay"></div>
+                <div>
+                    <h3>Add Player</h3>
+                    <input type="text" id="playerName" placeholder="Name">
+                    <input type="text" id="playerKDTrials" placeholder="K/D Trials">
+                    <input type="text" id="playerKDCrucible" placeholder="K/D Crucible">
+                    <button id="addPlayer" onclick="addPlayer()">Add Player</button>
+                </div>
+            </div>
+        </div>  
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

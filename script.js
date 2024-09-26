@@ -32,8 +32,9 @@ function addPlayer() {
     const name = document.getElementById('playerName').value;
     const kdTrials = parseFloat(document.getElementById('playerKDTrials').value.replace(',', '.')) || 0;
     const kdCrucible = parseFloat(document.getElementById('playerKDCrucible').value.replace(',', '.')) || 0;
+    const clanTag = document.getElementById('clanTag').value;
 
-    const player = { name, kdTrials, kdCrucible };
+    const player = { name, clanTag, kdTrials, kdCrucible };
     availablePlayers.push(player);
     updateAvailablePlayers();
     
@@ -45,9 +46,10 @@ function importPlayers() {
     const lines = baseText.split('\n');
 
     lines.forEach(line => {
-        const [name, kdTrials, kdCrucible] = line.split(/\s+/);
+        const [name, clanTag, kdTrials, kdCrucible] = line.split(/U002F/);
         const player = {
             name,
+            clanTag,
             kdTrials: parseFloat(kdTrials.replace(',', '.')) || 0,
             kdCrucible: parseFloat(kdCrucible.replace(',', '.')) || 0
         };
@@ -55,6 +57,8 @@ function importPlayers() {
     });
 
     updateAvailablePlayers();
+    sortPlayersByKD()
+    document.getElementById('playerBaseInput').value = '';
 }
 
 function updateSliderLabel() {
@@ -118,6 +122,7 @@ function addToTeam(player, index) {
     filterAvailablePlayers();
     updateTeam('A', currentTeamA);
     updateTeam('B', currentTeamB);
+    sortTeamsByKD()
 }
 
 function updateKDDifference() {
@@ -151,6 +156,7 @@ function switchPlayerTeam(currentTeam, oppositeTeam, index) {
     // Обновляем обе команды
     updateTeam(currentTeam, currentTeamArray);
     updateTeam(oppositeTeam, oppositeTeamArray);
+    sortTeamsByKD()
 }
 
 // Сортировка команд при реролле
@@ -202,6 +208,7 @@ function rerollTeams() {
                 }
             }
         }
+        sortTeamsByKD()
     });
 
     updateTeam('A', currentTeamA, previousTeamA || []);
@@ -276,6 +283,7 @@ function resetTeams() {
     currentTeamA.length = 0;
     currentTeamB.length = 0;
     updateAvailablePlayers();
+    sortPlayersByKD()
     updateTeam('A', currentTeamA);
     updateTeam('B', currentTeamB);
 }
@@ -308,7 +316,7 @@ function createPlayerCard(player, index, inTeam = false, team = '', oppositeTeam
         <div class="player-avatar"></div>
         <div class="player-info">
             <span class="player-name">${player.name}</span>
-            <span class="player-clan">[Sky]</span>
+            <span class="player-clan">[${player.clanTag}]</span>
         </div>
         <div class="player-kd">
             <div class="player-decoration"></div>

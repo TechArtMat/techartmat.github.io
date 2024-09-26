@@ -8,7 +8,9 @@ body {
     font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
     display: flex;
     justify-content: center;
-
+    margin: 0;
+    height: 100vh;
+    align-items: center;
 }
 
 /* .player {
@@ -97,6 +99,9 @@ body {
 
 .team-wrapper {
     display: flex;
+    background-image: url("fullhd.png");
+    background-attachment: fixed;
+    background-position: center;
 }
 
 .team + .team {

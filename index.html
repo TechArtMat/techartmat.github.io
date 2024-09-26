@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <title>Player Selection</title>
 </head>
 <body>
@@ -113,10 +114,10 @@ scrym#0422	1.12	1.06</textarea>
             <div class="tools">
                 <div class="tools-btn-slider-wrapper">
                     <div id="kdDifferenceDisplay">K/D Trials Difference Between Teams: 0.00</div>
-                    <label id="kdDiffLabel">Max K/D Trials Difference:</label>
                     <div class="kdDiffSlider-container">
+                        <label id="kdDiffLabel">Max K/D Trials Difference:</label>
                         <input type="range" id="kdDiffSlider" min="0" max="1" step="0.01" value="0.5" oninput="updateSliderLabel()" />
-                        <span id="kdDiffDisplay" class="slider-label">0.50</span>
+                        <span id="kdDiffDisplay" class="slider-text">0.50</span>
                     </div>
                 </div>
                 
@@ -139,6 +140,9 @@ scrym#0422	1.12	1.06</textarea>
                     <div class="tools-btn-container">
                         <button class="tools-btn" onclick="sortTeamsByKD()">Sort by K/D</button>
                     </div>
+                    <div class="tools-btn-container">
+                        <button class="tools-btn" id="screenshotBtn" onclick=takeScreenshot()>Take Screenshot</button>
+                    </div>
                 </div>
 
                 <!-- <div>
@@ -151,7 +155,6 @@ scrym#0422	1.12	1.06</textarea>
             </div>
         </div>  
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>

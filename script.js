@@ -11,10 +11,7 @@ document.getElementById('btnTrials').classList.add('checked');
 document.querySelectorAll('.radio-btn').forEach(button => {
     button.addEventListener('click', function() {
         document.querySelectorAll('.radio-btn').forEach(btn => btn.classList.remove('checked'));
-        
         this.classList.add('checked');
-        
-        // Обновляем выбранный тип (например, для сортировки по Trials или Crucible)
         let selectedType = this.getAttribute('data-type');
         
         handleTypeSelection(selectedType);
@@ -25,10 +22,8 @@ document.querySelectorAll('.radio-btn').forEach(button => {
 function handleTypeSelection(selectedType) {
     if (selectedType === 'trials') {
         console.log("Trials selected");
-        // Ваша логика для работы с Trials
     } else if (selectedType === 'crucible') {
         console.log("Crucible selected");
-        // Ваша логика для работы с Crucible
     }
 }
 
@@ -62,40 +57,21 @@ function importPlayers() {
     updateAvailablePlayers();
 }
 
-// Обновление текста и значения слайдера в зависимости от выбранного режима
-// function updateSliderLabel() {
-//     let isSortByTrials = document.querySelector('input[name="sortBy"]:checked').value === 'trials';
-//     const kdDiffValue = parseFloat(document.getElementById('kdDiffSlider').value).toFixed(2);
-
-//     // Обновляем текст в зависимости от выбранного режима
-//     const kdDiffLabel = document.getElementById('kdDiffLabel');
-//     kdDiffLabel.innerText = isSortByTrials ? "Max K/D Trials Difference:" : "Max K/D Crucible Difference:";
-    
-//     // Отображаем текущее значение слайдера
-//     document.getElementById('kdDiffDisplay').innerText = kdDiffValue;
-// }
-
-// Обновление текста и значения слайдера в зависимости от выбранного режима
 function updateSliderLabel() {
-    // Проверяем, какая кнопка выбрана (Trials или Crucible)
     let isSortByTrials = document.getElementById('btnTrials').classList.contains('checked');
     const kdDiffValue = parseFloat(document.getElementById('kdDiffSlider').value).toFixed(2);
 
-    // Обновляем текст в зависимости от выбранного режима
     const kdDiffLabel = document.getElementById('kdDiffLabel');
     kdDiffLabel.innerText = isSortByTrials ? "Max K/D Trials Difference:" : "Max K/D Crucible Difference:";
 
-    // Обновляем цвет фона слайдера в зависимости от режима
     const slider = document.getElementById('kdDiffSlider');
     const percentage = (slider.value - slider.min) / (slider.max - slider.min) * 100;
 
     if (isSortByTrials) {
-        slider.style.background = `linear-gradient(to right, #f0f0f0 ${percentage}%, #FFD45E ${percentage}%)`; // Фон для Trials
+        slider.style.background = `linear-gradient(to right, #f0f0f0 ${percentage}%, #FFD45E ${percentage}%)`;
     } else {
-        slider.style.background = `linear-gradient(to right, #f0f0f0 ${percentage}%, #FF4646 ${percentage}%)`; // Фон для Crucible
+        slider.style.background = `linear-gradient(to right, #f0f0f0 ${percentage}%, #FF4646 ${percentage}%)`;
     }
-
-    // Отображаем текущее значение слайдера
     document.getElementById('kdDiffDisplay').innerText = kdDiffValue;
 }
 
@@ -124,10 +100,9 @@ function updateAvailablePlayers(filteredPlayers = availablePlayers.map((player, 
 function filterAvailablePlayers() {
     const searchValue = document.getElementById('searchPlayerInput').value.toLowerCase();
     const filteredPlayers = availablePlayers
-        .map((player, index) => ({ player, index }))  // Сохраняем игрока и его индекс
+        .map((player, index) => ({ player, index }))
         .filter(({ player }) => player.name.toLowerCase().includes(searchValue));
 
-    // Обновляем список доступных игроков на основе фильтра
     updateAvailablePlayers(filteredPlayers);
 }
 
@@ -180,10 +155,9 @@ function switchPlayerTeam(currentTeam, oppositeTeam, index) {
 
 // Сортировка команд при реролле
 function rerollTeams() {
-    let maxDiff = parseFloat(document.getElementById('kdDiffSlider').value);  // Используем одно значение слайдера
+    let maxDiff = parseFloat(document.getElementById('kdDiffSlider').value);
     let isSortByTrials = document.getElementById('btnTrials').classList.contains('checked');
 
-    // Сохраняем текущее состояние команд
     previousTeamA = [...currentTeamA];
     previousTeamB = [...currentTeamB];
 
@@ -234,48 +208,9 @@ function rerollTeams() {
     updateTeam('B', currentTeamB, previousTeamB || []);
 }
 
-// function updateTeam(team, teamArray, previousTeamArray) {
-//     const teamPlayersDiv = document.getElementById(`team${team}`);
-//     teamPlayersDiv.innerHTML = '';
-
-//     let totalKDTrials = 0;
-//     let totalKDCrucible = 0;
-
-//     teamArray.forEach((player, index) => {
-//         const playerDiv = document.createElement('div');
-//         const oppositeTeam = team === 'A' ? 'B' : 'A';
-
-//         // Проверка, поменял ли игрок команду
-//         const playerMoved = previousTeamArray && previousTeamArray.length > 0 
-//             ? !previousTeamArray.some(prevPlayer => prevPlayer && prevPlayer.name === player.name)
-//             : false;
-
-//         // Добавляем CSS-класс для игрока, если он переместился
-//         playerDiv.style.backgroundColor = playerMoved ? 'red' : '';
-
-//         playerDiv.innerHTML = `
-//             ${player.name} (K/D Trials: ${player.kdTrials}, K/D Crucible: ${player.kdCrucible})
-//             <button onclick="switchPlayerTeam('${team}', '${oppositeTeam}', ${index})">Change team</button>
-//         `;
-
-//         teamPlayersDiv.appendChild(playerDiv);
-
-//         totalKDTrials += player.kdTrials;
-//         totalKDCrucible += player.kdCrucible;
-//     });
-
-//     const avgKDTrials = teamArray.length ? (totalKDTrials / teamArray.length).toFixed(2) : '0.00';
-//     const avgKDCrucible = teamArray.length ? (totalKDCrucible / teamArray.length).toFixed(2) : '0.00';
-
-//     document.getElementById(`avgKDTrials${team}`).innerText = avgKDTrials;
-//     document.getElementById(`avgKDCrucible${team}`).innerText = avgKDCrucible;
-
-//     updateKDDifference();
-// }
-
 function updateTeam(team, teamArray, previousTeamArray = []) {
     const teamDiv = document.getElementById(`team${team}`);
-    teamDiv.innerHTML = '';  // Очищаем содержимое команды
+    teamDiv.innerHTML = '';
 
     let totalKDTrials = 0;
     let totalKDCrucible = 0;
@@ -283,15 +218,12 @@ function updateTeam(team, teamArray, previousTeamArray = []) {
     teamArray.forEach((player, index) => {
         const oppositeTeam = team === 'A' ? 'B' : 'A';
 
-        // Проверка, поменял ли игрок команду
         const playerMoved = previousTeamArray.length > 0 
             ? !previousTeamArray.some(prevPlayer => prevPlayer && prevPlayer.name === player.name)
             : false;
 
-        // Создание карточки игрока
         const playerCard = createPlayerCard(player, index, true, team, oppositeTeam);
 
-        // Находим элемент с классом 'player-avatar' и изменяем его фон, если игрок переместился
         const playerAvatar = playerCard.querySelector('.player-avatar');
         if (playerMoved && playerAvatar) {
             playerAvatar.style.backgroundColor = '#A77373';  // Окрашиваем фон только аватара в красный
@@ -322,18 +254,20 @@ function sortTeamsByKD() {
     let isSortByTrials = document.getElementById('btnTrials').classList.contains('checked');
 
     if (isSortByTrials) {
-        // Сортировка по Trials
         currentTeamA.sort((a, b) => b.kdTrials - a.kdTrials);
         currentTeamB.sort((a, b) => b.kdTrials - a.kdTrials);
     } else {
-        // Сортировка по Crucible
         currentTeamA.sort((a, b) => b.kdCrucible - a.kdCrucible);
         currentTeamB.sort((a, b) => b.kdCrucible - a.kdCrucible);
     }
 
-    // Обновляем команды после сортировки
     updateTeam('A', currentTeamA);
     updateTeam('B', currentTeamB);
+}
+
+function sortPlayersByKD() {
+    availablePlayers.sort((a, b) => b.kdTrials - a.kdTrials);
+    updateAvailablePlayers();
 }
 
 // Сброс команд
@@ -386,17 +320,15 @@ function createPlayerCard(player, index, inTeam = false, team = '', oppositeTeam
     `;
 
     if (inTeam) {
-        // Добавляем кнопку для переключения команды
         const switchButton = document.createElement('button');
         switchButton.className = 'switch-btn';
         switchButton.innerHTML = '&#8646;';
         switchButton.onclick = (event) => {
-            event.stopPropagation();  // Останавливаем всплытие события клика
-            switchPlayerTeam(team, oppositeTeam, index); // Переключаем команду
+            event.stopPropagation();
+            switchPlayerTeam(team, oppositeTeam, index);
         };
         playerCard.appendChild(switchButton);
 
-        // Добавляем возможность вернуть игрока в список доступных при клике на карточку
         playerCard.onclick = () => returnToAvailable(player, team, index);
     } else {
         const switchButton = document.createElement('button');
@@ -404,22 +336,45 @@ function createPlayerCard(player, index, inTeam = false, team = '', oppositeTeam
         switchButton.innerHTML = '';
         switchButton.onclick = () => switchPlayerTeam(team, oppositeTeam, index);
         playerCard.appendChild(switchButton);
-        playerCard.onclick = () => addToTeam(player, index); // Если игрок доступен
+        playerCard.onclick = () => addToTeam(player, index);
     }
 
     return playerCard;
 }
 
-// Функция возвращения игрока в список доступных
 function returnToAvailable(player, team, index) {
     const currentTeamArray = team === 'A' ? currentTeamA : currentTeamB;
     
-    // Удаляем игрока из команды и возвращаем в список доступных игроков
     currentTeamArray.splice(index, 1);
     availablePlayers.push(player);
     
-    // Обновляем список доступных игроков и команд
+    sortPlayersByKD()
     filterAvailablePlayers();
     updateTeam('A', currentTeamA);
     updateTeam('B', currentTeamB);
+}
+
+function takeScreenshot() {
+    document.getElementById('screenshotBtn').addEventListener('click', function() {
+        const teamWrapper = document.querySelector('.team-wrapper');
+    
+        html2canvas(teamWrapper, {
+            backgroundColor: null,
+            useCORS: true
+        }).then(function(canvas) {
+            canvas.toBlob(function(blob) {
+                if (navigator.clipboard && navigator.clipboard.write) {
+                    const item = new ClipboardItem({'image/png': blob});
+                    navigator.clipboard.write([item]).then(function() {
+                        console.log('The screenshot with the background has been successfully copied to the clipboard!');
+                    }).catch(function(err) {
+                        console.error('Error copying screenshot: ', err);
+                    });
+                } else {
+                    console.error('Clipboard API is not supported in this browser.');
+                }
+            });
+        });
+    });
+    
 }

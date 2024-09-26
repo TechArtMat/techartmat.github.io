@@ -85,9 +85,20 @@ function updateSliderLabel() {
     const kdDiffLabel = document.getElementById('kdDiffLabel');
     kdDiffLabel.innerText = isSortByTrials ? "Max K/D Trials Difference:" : "Max K/D Crucible Difference:";
 
+    // Обновляем цвет фона слайдера в зависимости от режима
+    const slider = document.getElementById('kdDiffSlider');
+    const percentage = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+
+    if (isSortByTrials) {
+        slider.style.background = `linear-gradient(to right, #f0f0f0 ${percentage}%, #FFD45E ${percentage}%)`; // Фон для Trials
+    } else {
+        slider.style.background = `linear-gradient(to right, #f0f0f0 ${percentage}%, #FF4646 ${percentage}%)`; // Фон для Crucible
+    }
+
     // Отображаем текущее значение слайдера
     document.getElementById('kdDiffDisplay').innerText = kdDiffValue;
 }
+
 
 
 function updateSliderValues() {

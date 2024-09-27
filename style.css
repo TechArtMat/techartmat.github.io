@@ -91,6 +91,10 @@ body {
     background-color: #738EA7;
 } */
 
+.kdDifferenceDisplay-error {
+    color: red;
+}
+
 .team {
     /* height: 480px; */
     width: 400px;

@@ -3,6 +3,7 @@ let currentTeamA = [];
 let currentTeamB = [];
 let previousTeamA = [];
 let previousTeamB = [];
+let rerollAttempts = 0;
 
 // Инициализация состояния по умолчанию (например, "Trials" выбрано изначально)
 document.getElementById('btnTrials').classList.add('checked');
@@ -134,7 +135,6 @@ function updateKDDifference() {
     let kdDifferenceTrials = Math.abs(avgKDTrialsA - avgKDTrialsB).toFixed(2);
     let kdDifferenceCrucible = Math.abs(avgKDCrucibleA - avgKDCrucibleB).toFixed(2);
 
-    // Проверяем, что выбрано для расчета (Trials или Crucible)
     let isSortByTrials = document.getElementById('btnTrials').classList.contains('checked');
 
     let kdDifferenceText = isSortByTrials 
@@ -182,7 +182,7 @@ function rerollTeams() {
         let avgKDTrialsB = calculateAverageKD(currentTeamB, 'trials');
         let avgKDCrucibleA = calculateAverageKD(currentTeamA, 'crucible');
         let avgKDCrucibleB = calculateAverageKD(currentTeamB, 'crucible');
-
+        
         if (isSortByTrials) {
             if (currentTeamA.length < teamASize && Math.abs(avgKDTrialsA - avgKDTrialsB) <= maxDiff) {
                 currentTeamA.push(player);
@@ -208,11 +208,50 @@ function rerollTeams() {
                 }
             }
         }
-        sortTeamsByKD()
     });
-
+    shouldRerollAgain ()
+    sortTeamsByKD()
     updateTeam('A', currentTeamA, previousTeamA || []);
     updateTeam('B', currentTeamB, previousTeamB || []);
+}
+
+function shouldRerollAgain (){
+    document.getElementById('kdDifferenceDisplay').classList.remove('kdDifferenceDisplay-error')
+    const maxRerollCount = 20;
+
+    let isSortByTrials = document.getElementById('btnTrials').classList.contains('checked');
+    let KDDiff = parseFloat(document.getElementById('kdDiffSlider').value);
+    let avgKDTrialsA = calculateAverageKD(currentTeamA, 'trials');
+    let avgKDTrialsB = calculateAverageKD(currentTeamB, 'trials');
+    let avgKDCrucibleA = calculateAverageKD(currentTeamA, 'crucible');
+    let avgKDCrucibleB = calculateAverageKD(currentTeamB, 'crucible');
+
+    if (rerollAttempts >= maxRerollCount) {
+        console.log('Maximum number of reroll attempts reached');
+        document.getElementById('kdDifferenceDisplay').classList.add('kdDifferenceDisplay-error')
+        rerollAttempts = 0
+    } else {
+        if (isSortByTrials){
+            if (Math.abs(avgKDTrialsA - avgKDTrialsB) <= KDDiff){
+            } else {
+                console.log('Wrong! Again')
+                rerollAttempts++;
+                rerollTeams()
+            }
+        } else {
+            if (Math.abs(avgKDCrucibleA - avgKDCrucibleB) <= KDDiff){
+            } else {
+                console.log('Wrong! Again')
+                rerollAttempts++;
+                rerollTeams()
+            }        
+        }
+    }
+    
+
+
+
+    
 }
 
 function updateTeam(team, teamArray, previousTeamArray = []) {

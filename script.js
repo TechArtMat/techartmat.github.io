@@ -56,6 +56,7 @@ function importPlayers() {
         };
         availablePlayers.push(player);
     });
+    
 
     updateAvailablePlayers();
     sortPlayersByKD()

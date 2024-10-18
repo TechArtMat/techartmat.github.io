@@ -6,23 +6,20 @@ let previousTeamB = [];
 let rerollAttempts = 0;
 
 let currentContextPlayer = null;
-let lockedPlayers = new Set(); // Множество для хранения залоченных игроков
+let lockedPlayers = new Set();
 
-// Добавление обработчика для правого клика
 document.addEventListener('contextmenu', function(event) {
-    event.preventDefault(); // Отключаем стандартное контекстное меню
+    event.preventDefault();
 
-    const playerCard = event.target.closest('.player-card'); // Находим карточку игрока
+    const playerCard = event.target.closest('.player-card');
     if (playerCard) {
         currentContextPlayer = playerCard;
         const playerName = playerCard.querySelector('.player-name').innerText;
 
-        // Проверяем, залочен ли игрок, и меняем текст кнопки
         const lockButton = document.getElementById('lockPlayerBtn');
         if (lockedPlayers.has(playerName)) {
-            lockButton.innerText = 'Разлочить'; // Меняем текст кнопки
-        } else {
-            lockButton.innerText = 'Залочить';
+            lockButton.innerText = 'Unlock';
+            lockButton.innerText = 'Lock';
         }
 
         showContextMenu(event.pageX, event.pageY);
@@ -31,7 +28,6 @@ document.addEventListener('contextmenu', function(event) {
     }
 });
 
-// Показ контекстного меню
 function showContextMenu(x, y) {
     const menu = document.getElementById('contextMenu');
     menu.style.top = `${y}px`;
@@ -39,41 +35,35 @@ function showContextMenu(x, y) {
     menu.style.display = 'block';
 }
 
-// Скрытие контекстного меню
 function hideContextMenu() {
     const menu = document.getElementById('contextMenu');
     menu.style.display = 'none';
 }
 
-// Закрытие меню при клике в любое место вне меню
 document.addEventListener('click', function() {
     hideContextMenu();
 });
 
-// Добавление обработчика для кнопки "Залочить/Разлочить"
 document.getElementById('lockPlayerBtn').addEventListener('click', function() {
     if (currentContextPlayer) {
         const playerName = currentContextPlayer.querySelector('.player-name').innerText;
 
-        // Если игрок уже залочен, снимаем залочку
         if (lockedPlayers.has(playerName)) {
             lockedPlayers.delete(playerName);
-            currentContextPlayer.classList.remove('locked'); // Убираем класс для залоченного игрока
-            currentContextPlayer.style.backgroundColor = ''; // Возвращаем стандартный фон
+            currentContextPlayer.classList.remove('locked');
+            currentContextPlayer.style.backgroundColor = '';
         } else {
             lockedPlayers.add(playerName);
-            currentContextPlayer.classList.add('locked'); // Добавляем класс залочки
-            currentContextPlayer.style.backgroundColor = 'rgb(0 0 0 / 25%)'; // Меняем фон на залоченный (например, желтый)
+            currentContextPlayer.classList.add('locked');
+            currentContextPlayer.style.backgroundColor = 'rgb(0 0 0 / 25%)';
         }
 
         hideContextMenu();
     }
 });
 
-// Инициализация состояния по умолчанию (например, "Trials" выбрано изначально)
-document.getElementById('btnTrials').classList.add('checked');
 
-// Добавляем слушатели кликов для обеих кнопок
+document.getElementById('btnTrials').classList.add('checked');
 document.querySelectorAll('.radio-btn').forEach(button => {
     button.addEventListener('click', function() {
         document.querySelectorAll('.radio-btn').forEach(btn => btn.classList.remove('checked'));
@@ -84,7 +74,6 @@ document.querySelectorAll('.radio-btn').forEach(button => {
     });
 });
 
-// Функция для обработки логики выбора
 function handleTypeSelection(selectedType) {
     if (selectedType === 'trials') {
         console.log("Trials selected");
@@ -93,7 +82,6 @@ function handleTypeSelection(selectedType) {
     }
 }
 
-// Добавление игрока в доступные игроки
 function addPlayer() {
     const name = document.getElementById('playerName').value;
     const kdTrials = parseFloat(document.getElementById('playerKDTrials').value.replace(',', '.')) || 0;
@@ -111,7 +99,6 @@ function addPlayer() {
     
 }
 
-// Импорт базы игроков
 function importPlayers() {
     const baseText = document.getElementById('playerBaseInput').value;
     const lines = baseText.split('\n');
@@ -181,18 +168,16 @@ function updateSliderValues() {
     document.getElementById("crucibleDiffDisplay").textContent = kdCrucibleDifference;
 }
 
-// Обновление доступных игроков
 function updateAvailablePlayers(filteredPlayers = availablePlayers.map((player, index) => ({ player, index }))) {
     const availablePlayersDiv = document.getElementById('availablePlayers');
     availablePlayersDiv.innerHTML = '';
 
     filteredPlayers.forEach(({ player, index }) => {
-        const playerCard = createPlayerCard(player, index); // Создаем карточку без кнопки
+        const playerCard = createPlayerCard(player, index);
         availablePlayersDiv.appendChild(playerCard);
     });
 }
 
-// Фильтрация доступных игроков по имени
 function filterAvailablePlayers() {
     const searchValue = document.getElementById('searchPlayerInput').value.toLowerCase();
     const filteredPlayers = availablePlayers
@@ -202,7 +187,6 @@ function filterAvailablePlayers() {
     updateAvailablePlayers(filteredPlayers);
 }
 
-// Добавление игрока в команду
 function addToTeam(player, index) {
     // getPlayerCrucibleTime(player.name); // Получение времени в Горниле для игрока
     console.log(player.name);
@@ -239,22 +223,18 @@ function updateKDDifference() {
     document.getElementById('kdDifferenceDisplay').innerText = kdDifferenceText;
 }
 
-// Смена команды игрока
 function switchPlayerTeam(currentTeam, oppositeTeam, index) {
     const currentTeamArray = currentTeam === 'A' ? currentTeamA : currentTeamB;
     const oppositeTeamArray = oppositeTeam === 'A' ? currentTeamA : currentTeamB;
 
-    // Удаляем игрока из текущей команды и добавляем в противоположную
     const player = currentTeamArray.splice(index, 1)[0];
     oppositeTeamArray.push(player);
 
-    // Обновляем обе команды
     updateTeam(currentTeam, currentTeamArray);
     updateTeam(oppositeTeam, oppositeTeamArray);
     sortTeamsByKD()
 }
 
-// Сортировка команд при реролле
 function rerollTeams() {
     let maxDiff = parseFloat(document.getElementById('kdDiffSlider').value);
     let isSortByTrials = document.getElementById('btnTrials').classList.contains('checked');
@@ -262,19 +242,16 @@ function rerollTeams() {
     previousTeamA = [...currentTeamA];
     previousTeamB = [...currentTeamB];
 
-    // Собираем всех не залоченных игроков
     const unlockedPlayers = [...currentTeamA.filter(p => !lockedPlayers.has(p.name)), ...currentTeamB.filter(p => !lockedPlayers.has(p.name))];
-    currentTeamA = [...currentTeamA.filter(p => lockedPlayers.has(p.name))]; // Оставляем залоченных в команде
-    currentTeamB = [...currentTeamB.filter(p => lockedPlayers.has(p.name))]; // Оставляем залоченных в команде
+    currentTeamA = [...currentTeamA.filter(p => lockedPlayers.has(p.name))];
+    currentTeamB = [...currentTeamB.filter(p => lockedPlayers.has(p.name))];
 
     shuffleArray(unlockedPlayers);
 
-    // Рассчитываем необходимое количество игроков для команд
     let totalPlayers = unlockedPlayers.length + currentTeamA.length + currentTeamB.length;
     let teamASize = Math.ceil(totalPlayers / 2);
     let teamBSize = totalPlayers - teamASize;
 
-    // Добавляем не залоченных игроков в команды, учитывая баланс K/D
     unlockedPlayers.forEach(player => {
         let avgKDTrialsA = calculateAverageKD(currentTeamA, 'trials');
         let avgKDTrialsB = calculateAverageKD(currentTeamB, 'trials');
@@ -367,52 +344,41 @@ function updateTeam(team, teamArray, previousTeamArray = []) {
     teamArray.forEach((player, index) => {
         const oppositeTeam = team === 'A' ? 'B' : 'A';
 
-        // Проверка, поменял ли игрок команду
         const playerMoved = previousTeamArray.length > 0 
             ? !previousTeamArray.some(prevPlayer => prevPlayer && prevPlayer.name === player.name)
             : false;
 
-        // Создаём карточку игрока
         const playerCard = createPlayerCard(player, index, true, team, oppositeTeam);
 
         const playerAvatar = playerCard.querySelector('.player-avatar');
         
-        // Если игрок перемещался, окрашиваем аватар
         if (playerMoved && playerAvatar) {
-            playerAvatar.style.backgroundColor = '#A77373';  // Окрашиваем фон только аватара в красный
-            playerCard.style.backgroundColor = 'rgb(92 0 0 / 25%)';  // Окрашиваем карточку при перемещении
+            playerAvatar.style.backgroundColor = '#A77373';
+            playerCard.style.backgroundColor = 'rgb(92 0 0 / 25%)';
         }
 
-        // Проверка, является ли игрок залоченным
         if (lockedPlayers.has(player.name)) {
-            playerCard.classList.add('locked');  // Добавляем класс залоченного игрока
-            playerCard.style.backgroundColor = 'rgb(0 0 0 / 25%)';  // Жёлтый фон для залоченных игроков
+            playerCard.classList.add('locked');
+            playerCard.style.backgroundColor = 'rgb(0 0 0 / 25%)';
         } else {
-            // Обработка незалоченных игроков (по умолчанию)
-            playerCard.style.backgroundColor = ''; // Сбрасываем цвет для незалоченных
+            playerCard.style.backgroundColor = '';
         }
 
-        // Добавляем карточку игрока в команду
         teamDiv.appendChild(playerCard);
 
-        // Считаем суммарное K/D
         totalKDTrials += player.kdTrials;
         totalKDCrucible += player.kdCrucible;
     });
 
-    // Вычисляем средние значения K/D для команды
     const avgKDTrials = teamArray.length ? (totalKDTrials / teamArray.length).toFixed(2) : '0.00';
     const avgKDCrucible = teamArray.length ? (totalKDCrucible / teamArray.length).toFixed(2) : '0.00';
 
-    // Обновляем отображение средних значений K/D
     document.getElementById(`avgKDTrials${team}`).innerText = avgKDTrials;
     document.getElementById(`avgKDCrucible${team}`).innerText = avgKDCrucible;
 
-    // Обновляем разницу K/D между командами
     updateKDDifference();
 }
 
-// Сортировка игроков в обеих командах по убыванию K/D
 function sortTeamsByKD() {
     let isSortByTrials = document.getElementById('btnTrials').classList.contains('checked');
 
@@ -433,7 +399,6 @@ function sortPlayersByKD() {
     updateAvailablePlayers();
 }
 
-// Сброс команд
 function resetTeams() {
     availablePlayers = availablePlayers.concat(currentTeamA, currentTeamB);
     currentTeamA.length = 0;
@@ -444,7 +409,6 @@ function resetTeams() {
     updateTeam('B', currentTeamB);
 }
 
-// Перемешивание массива
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -453,7 +417,6 @@ function shuffleArray(array) {
     return array;
 }
 
-// Расчет среднего K/D
 function calculateAverageKD(team, type) {
     const totalKD = team.reduce((acc, player) => {
         const kd = parseFloat(player[`kd${type.charAt(0).toUpperCase() + type.slice(1)}`]);
@@ -462,8 +425,6 @@ function calculateAverageKD(team, type) {
     return (team.length > 0) ? (totalKD / team.length) : 0;
 }
 
-
-// Создание карточки игрока
 function createPlayerCard(player, index, inTeam = false, team = '', oppositeTeam = '') {
     const playerCard = document.createElement('div');
     playerCard.className = 'player-card';

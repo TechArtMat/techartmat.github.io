@@ -19,11 +19,27 @@ body {
     position: relative;
 }
 
+.arrows {
+    /* background-image: url("background/T_D2_StartScreen_02_4k_Arrows.png"); */
+    animation-name: spin;
+    animation: spin 450s linear infinite;
+    
+}
+
+.static-rectangles {
+    /* background-image: url("background/T_D2_StartScreen_Static_Rectangles.png"); */
+}
+
+.anim-circle-sm {
+    /* background-image: url("background/T_D2_StartScreen_Anim_Circle_Small.png"); */
+    animation-name: spin;
+    animation: spin 450s linear infinite;
+}
+
 .dec {
     position: fixed;
     height: 8300px;
     width: 8300px;
-    background-image: url("background/T_D2_StartScreen_02_4k_Arrows.png");
     /* background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center; */
@@ -32,8 +48,6 @@ body {
     background-repeat: no-repeat;
     width: 100vw;
     height: 100vh;
-    animation-name: spin;
-    animation: spin 450s linear infinite;
     pointer-events: none;
     /* animation-duration: 5000ms;
     animation-iteration-count: infinite;
@@ -47,6 +61,31 @@ body {
     to {
         transform:rotate(360deg);
     }
+}
+
+.player-card.locked {
+    background-color: rgb(0 0 0 / 25%);
+}
+
+.context-menu {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    z-index: 1000;
+}
+
+.context-menu button {
+    display: block;
+    padding: 5px 10px;
+    background-color: #f1f1f1;
+    border: none;
+    cursor: pointer;
+}
+
+.context-menu button:hover {
+    background-color: #ddd;
 }
 
 #availablePlayers > div {
@@ -72,7 +111,8 @@ body {
 
 .dec-container + #searchPlayerInput, 
 #searchPlayerInput + #availablePlayers, 
-#availablePlayers + #playerBaseInput,
+#availablePlayers + .addPlayer,
+.addPlayer + #playerBaseInput,
 #teamA + .avgKD, #teamB + .avgKD  {
     margin-top: 4px;
 }
@@ -115,6 +155,46 @@ body {
     color: red;
 }
 
+.addPlayer {
+    max-width: 400px;
+    display: grid;
+    grid-template-columns: 6fr 1fr 1fr 1fr 1fr;
+    /* gap: 4px; */
+}
+
+
+
+.addPlayer-item {
+    /* max-width: 70px; */
+    outline: none;
+    text-align: center;
+    font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+    border: 1px #0000002a solid;
+    backdrop-filter: blur(0.8px);
+    -webkit-backdrop-filter: blur(0.7px);
+    max-height: 40px;
+    box-shadow: inset 0px 0px 2px 0px rgb(0 0 0 / 20%);
+    color: #fff;
+}
+
+
+.addPlayer-item + .addPlayer-item {
+    margin-left: 1px;
+    width: 50px;
+}
+
+.addPlayer > input {
+    background-color: rgba(92, 92, 92, 0.25);
+    
+}
+
+.addPlayer > button {
+    background-color: #A5A5A5;
+    color: #111;
+    cursor: pointer;
+    font-weight: 500;
+}
+
 .team {
     /* height: 480px; */
     width: 400px;
@@ -148,7 +228,7 @@ body {
     /* justify-content: center; */
 }
 
-.tools-btn:hover {
+.tools-btn:hover, .addPlayer > button:hover {
     background-color: #c2c2c2;
 }
 
@@ -185,6 +265,7 @@ body {
 }
 
 .kdDiffSlider-container {
+    text-align: center;
     width: 300px;
     position: relative;
 }

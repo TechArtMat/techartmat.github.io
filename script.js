@@ -5,6 +5,71 @@ let previousTeamA = [];
 let previousTeamB = [];
 let rerollAttempts = 0;
 
+let currentContextPlayer = null;
+let lockedPlayers = new Set(); // Множество для хранения залоченных игроков
+
+// Добавление обработчика для правого клика
+document.addEventListener('contextmenu', function(event) {
+    event.preventDefault(); // Отключаем стандартное контекстное меню
+
+    const playerCard = event.target.closest('.player-card'); // Находим карточку игрока
+    if (playerCard) {
+        currentContextPlayer = playerCard;
+        const playerName = playerCard.querySelector('.player-name').innerText;
+
+        // Проверяем, залочен ли игрок, и меняем текст кнопки
+        const lockButton = document.getElementById('lockPlayerBtn');
+        if (lockedPlayers.has(playerName)) {
+            lockButton.innerText = 'Разлочить'; // Меняем текст кнопки
+        } else {
+            lockButton.innerText = 'Залочить';
+        }
+
+        showContextMenu(event.pageX, event.pageY);
+    } else {
+        hideContextMenu();
+    }
+});
+
+// Показ контекстного меню
+function showContextMenu(x, y) {
+    const menu = document.getElementById('contextMenu');
+    menu.style.top = `${y}px`;
+    menu.style.left = `${x}px`;
+    menu.style.display = 'block';
+}
+
+// Скрытие контекстного меню
+function hideContextMenu() {
+    const menu = document.getElementById('contextMenu');
+    menu.style.display = 'none';
+}
+
+// Закрытие меню при клике в любое место вне меню
+document.addEventListener('click', function() {
+    hideContextMenu();
+});
+
+// Добавление обработчика для кнопки "Залочить/Разлочить"
+document.getElementById('lockPlayerBtn').addEventListener('click', function() {
+    if (currentContextPlayer) {
+        const playerName = currentContextPlayer.querySelector('.player-name').innerText;
+
+        // Если игрок уже залочен, снимаем залочку
+        if (lockedPlayers.has(playerName)) {
+            lockedPlayers.delete(playerName);
+            currentContextPlayer.classList.remove('locked'); // Убираем класс для залоченного игрока
+            currentContextPlayer.style.backgroundColor = ''; // Возвращаем стандартный фон
+        } else {
+            lockedPlayers.add(playerName);
+            currentContextPlayer.classList.add('locked'); // Добавляем класс залочки
+            currentContextPlayer.style.backgroundColor = 'rgb(0 0 0 / 25%)'; // Меняем фон на залоченный (например, желтый)
+        }
+
+        hideContextMenu();
+    }
+});
+
 // Инициализация состояния по умолчанию (например, "Trials" выбрано изначально)
 document.getElementById('btnTrials').classList.add('checked');
 
@@ -38,6 +103,11 @@ function addPlayer() {
     const player = { name, clanTag, kdTrials, kdCrucible };
     availablePlayers.push(player);
     updateAvailablePlayers();
+
+    document.getElementById('playerName').value = "";
+    document.getElementById('playerKDTrials').value = "";
+    document.getElementById('playerKDCrucible').value = "";
+    document.getElementById('clanTag').value = "";
     
 }
 
@@ -47,19 +117,34 @@ function importPlayers() {
     const lines = baseText.split('\n');
 
     lines.forEach(line => {
-        let [nameSplit, other] = line.split("#");
-        let parts = other.split("\t");
-        let [name, clanTag, kdTrials, kdCrucible] = parts.slice(" ");
-        name = nameSplit + "#" + parts[0];
-        const player = {
-            name,
-            clanTag,
-            kdTrials: parseFloat(kdTrials) || 0,
-            kdCrucible: parseFloat(kdCrucible) || 0
-        };
-        availablePlayers.push(player);
-
-        
+        console.log(line)
+        if (line.includes('#')) {
+            let [name, other] = line.split("#");
+            if (!other) return;
+    
+            let parts = other.split("\t");
+            name = name + "#" + (parts[0] || '');
+            let [clanTag, kdTrials, kdCrucible] = parts.slice(1);
+    
+            const player = {
+                name,
+                clanTag,
+                kdTrials: parseFloat(kdTrials) || 0,
+                kdCrucible: parseFloat(kdCrucible) || 0
+            };
+            availablePlayers.push(player);
+        } else {
+            let parts = line.split(/\s+/);
+            let [name, clanTag, kdTrials, kdCrucible] = parts;
+    
+            const player = {
+                name,
+                clanTag,
+                kdTrials: parseFloat(kdTrials) || 0,
+                kdCrucible: parseFloat(kdCrucible) || 0
+            };
+            availablePlayers.push(player);
+        }
     });
     
 
@@ -177,22 +262,25 @@ function rerollTeams() {
     previousTeamA = [...currentTeamA];
     previousTeamB = [...currentTeamB];
 
-    const allPlayers = currentTeamA.concat(currentTeamB);
-    currentTeamA = [];
-    currentTeamB = [];
+    // Собираем всех не залоченных игроков
+    const unlockedPlayers = [...currentTeamA.filter(p => !lockedPlayers.has(p.name)), ...currentTeamB.filter(p => !lockedPlayers.has(p.name))];
+    currentTeamA = [...currentTeamA.filter(p => lockedPlayers.has(p.name))]; // Оставляем залоченных в команде
+    currentTeamB = [...currentTeamB.filter(p => lockedPlayers.has(p.name))]; // Оставляем залоченных в команде
 
-    shuffleArray(allPlayers);
+    shuffleArray(unlockedPlayers);
 
-    let totalPlayers = allPlayers.length;
+    // Рассчитываем необходимое количество игроков для команд
+    let totalPlayers = unlockedPlayers.length + currentTeamA.length + currentTeamB.length;
     let teamASize = Math.ceil(totalPlayers / 2);
     let teamBSize = totalPlayers - teamASize;
 
-    allPlayers.forEach(player => {
+    // Добавляем не залоченных игроков в команды, учитывая баланс K/D
+    unlockedPlayers.forEach(player => {
         let avgKDTrialsA = calculateAverageKD(currentTeamA, 'trials');
         let avgKDTrialsB = calculateAverageKD(currentTeamB, 'trials');
         let avgKDCrucibleA = calculateAverageKD(currentTeamA, 'crucible');
         let avgKDCrucibleB = calculateAverageKD(currentTeamB, 'crucible');
-        
+
         if (isSortByTrials) {
             if (currentTeamA.length < teamASize && Math.abs(avgKDTrialsA - avgKDTrialsB) <= maxDiff) {
                 currentTeamA.push(player);
@@ -219,10 +307,19 @@ function rerollTeams() {
             }
         }
     });
-    shouldRerollAgain ()
-    sortTeamsByKD()
+
+    sortTeamsByKD();
     updateTeam('A', currentTeamA, previousTeamA || []);
     updateTeam('B', currentTeamB, previousTeamB || []);
+}
+
+function lockedPlayersInTeam(team) {
+    if (team === 'A') {
+        return previousTeamA.filter(player => lockedPlayers.has(player.name));
+    } else if (team === 'B') {
+        return previousTeamB.filter(player => lockedPlayers.has(player.name));
+    }
+    return [];
 }
 
 function shouldRerollAgain (){
@@ -258,10 +355,6 @@ function shouldRerollAgain (){
         }
     }
     
-
-
-
-    
 }
 
 function updateTeam(team, teamArray, previousTeamArray = []) {
@@ -274,18 +367,32 @@ function updateTeam(team, teamArray, previousTeamArray = []) {
     teamArray.forEach((player, index) => {
         const oppositeTeam = team === 'A' ? 'B' : 'A';
 
+        // Проверка, поменял ли игрок команду
         const playerMoved = previousTeamArray.length > 0 
             ? !previousTeamArray.some(prevPlayer => prevPlayer && prevPlayer.name === player.name)
             : false;
 
+        // Создаём карточку игрока
         const playerCard = createPlayerCard(player, index, true, team, oppositeTeam);
 
         const playerAvatar = playerCard.querySelector('.player-avatar');
+        
+        // Если игрок перемещался, окрашиваем аватар
         if (playerMoved && playerAvatar) {
             playerAvatar.style.backgroundColor = '#A77373';  // Окрашиваем фон только аватара в красный
-            playerCard.style.backgroundColor = 'rgb(92 0 0 / 25%)';
+            playerCard.style.backgroundColor = 'rgb(92 0 0 / 25%)';  // Окрашиваем карточку при перемещении
         }
 
+        // Проверка, является ли игрок залоченным
+        if (lockedPlayers.has(player.name)) {
+            playerCard.classList.add('locked');  // Добавляем класс залоченного игрока
+            playerCard.style.backgroundColor = 'rgb(0 0 0 / 25%)';  // Жёлтый фон для залоченных игроков
+        } else {
+            // Обработка незалоченных игроков (по умолчанию)
+            playerCard.style.backgroundColor = ''; // Сбрасываем цвет для незалоченных
+        }
+
+        // Добавляем карточку игрока в команду
         teamDiv.appendChild(playerCard);
 
         // Считаем суммарное K/D

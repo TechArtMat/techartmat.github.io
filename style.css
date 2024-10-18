@@ -1,16 +1,52 @@
 
 body {
-    background-image: url("fullhd.png");
-    background-repeat: no-repeat;
+    background-image: url("background/D2_StartScreen_01_4k_fullHD.png");
+    /* background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
-    /* background-size: 1920px 1080px; */
+    background-size: 1920px 1080px; */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100vw;
+    height: 100vh;
     font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
     display: flex;
     justify-content: center;
     margin: 0;
     height: 100vh;
     align-items: center;
+    position: relative;
+}
+
+.dec {
+    position: fixed;
+    height: 8300px;
+    width: 8300px;
+    background-image: url("background/T_D2_StartScreen_02_4k_Arrows.png");
+    /* background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center; */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100vw;
+    height: 100vh;
+    animation-name: spin;
+    animation: spin 450s linear infinite;
+    pointer-events: none;
+    /* animation-duration: 5000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear; */
+}
+
+@keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
 }
 
 #availablePlayers > div {
@@ -22,30 +58,6 @@ body {
     background-color: rgba(92, 92, 92, 0.15);
     backdrop-filter: blur(0.8px);
 }
-
-
-/* .player {
-    padding: 5px;
-    border: 1px solid #ccc;
-    cursor: pointer;
-    margin: 2px 0;
-}
-.team {
-    margin-bottom: 20px;
-}
-.team-title {
-    font-weight: bold;
-}
-
-#availablePlayers div, #teamA div, #teamB div {
-    padding: 5px;
-    margin: 2px;
-    border: 1px solid #ccc;
-    cursor: pointer;
-}
-#teamA, #teamB {
-    margin-top: 20px;
-} */
 
 .text-h2 {
     color: rgba(17, 34, 62, 0.6);
@@ -70,11 +82,9 @@ body {
     width: 394px;
     background-color: rgba(92, 92, 92, 0.25);
     border: 1px #000 solid;
-    /* border-radius: 0px; */
     backdrop-filter: blur(0.8px);
     -webkit-backdrop-filter: blur(0.7px);
     min-height: 40px;
-    /* color: #ffffff; */
     box-shadow: inset 0px 0px 2px 0px rgb(0 0 0 / 20%);
 }
 
@@ -91,7 +101,6 @@ body {
     max-width: 394px;
     border: 1px solid rgb(0, 0, 0, 0.1); 
     outline: none;
-    /* color: #fff;  */
 }
 
 #searchPlayerInput::placeholder {
@@ -114,7 +123,7 @@ body {
 
 .team-wrapper {
     display: flex;
-    background-image: url("fullhd.png");
+    /* background-image: url("fullhd.png"); */
     background-attachment: fixed;
     background-position: center;
 }
@@ -307,7 +316,7 @@ input[type=range]::-moz-range-thumb {
 
 
 #availablePlayers::-webkit-scrollbar {
-    display: none;  /* Для Chrome, Safari и других WebKit-браузеров: скрываем полосу прокрутки */
+    display: none;
 }
 
 .kd-trials, .kd-crucible {
@@ -344,8 +353,8 @@ input[type=range]::-moz-range-thumb {
 }
 
 .slot.filled {
-    visibility: hidden;  /* Показываем слот, когда он заполнен */
-    border: none;  /* Убираем границу, если слот заполнен */
+    visibility: hidden;
+    border: none;
 }
 
 .player-card {

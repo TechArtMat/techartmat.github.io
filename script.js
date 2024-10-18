@@ -47,14 +47,19 @@ function importPlayers() {
     const lines = baseText.split('\n');
 
     lines.forEach(line => {
-        const [name, clanTag, kdTrials, kdCrucible] = line.split(/U002F/);
+        let [nameSplit, other] = line.split("#");
+        let parts = other.split("\t");
+        let [name, clanTag, kdTrials, kdCrucible] = parts.slice(" ");
+        name = nameSplit + "#" + parts[0];
         const player = {
             name,
             clanTag,
-            kdTrials: parseFloat(kdTrials.replace(',', '.')) || 0,
-            kdCrucible: parseFloat(kdCrucible.replace(',', '.')) || 0
+            kdTrials: parseFloat(kdTrials) || 0,
+            kdCrucible: parseFloat(kdCrucible) || 0
         };
         availablePlayers.push(player);
+
+        
     });
     
 
@@ -114,6 +119,10 @@ function filterAvailablePlayers() {
 
 // Добавление игрока в команду
 function addToTeam(player, index) {
+    // getPlayerCrucibleTime(player.name); // Получение времени в Горниле для игрока
+    console.log(player.name);
+    console.log(encodeURIComponent(player.name));
+
     if (currentTeamA.length <= currentTeamB.length) {
         currentTeamA.push(player);
     } else {
@@ -426,3 +435,58 @@ function takeScreenshot() {
     });
     
 }
+
+//
+
+// Добавление функции для запроса данных из Bungie API
+// async function getPlayerCrucibleTime(displayName, membershipType = 0) {
+//     const apiKey = '4cd10d4ca2b44e438c20967dc56d1ec1';
+//     try {
+//         // Запрос на поиск игрока по имени
+//         const playerResponse = await fetch(`https://www.bungie.net/Platform/Destiny2/SearchDestinyPlayer/${membershipType}/${encodeURIComponent(displayName)}/`, {
+//             method: 'GET',
+//             headers: {
+//                 'X-API-Key': apiKey
+//             }
+//         });
+//         const playerData = await playerResponse.json();
+
+//         if (playerData.Response && playerData.Response.length > 0) {
+//             const membershipId = playerData.Response[0].membershipId;
+
+//             // Запрос на получение данных о профиле игрока
+//             const profileResponse = await fetch(`https://www.bungie.net/Platform/Destiny2/3/Profile/${membershipId}/?components=202`, {
+//                 method: 'GET',
+//                 headers: {
+//                     'X-API-Key': apiKey
+//                 }
+//             });
+//             const profileData = await profileResponse.json();
+
+//             // Извлечение времени в Горниле
+//             const crucibleTime = profileData.Response.characterActivities.data[0].activities.find(activity => activity.activityHash === 4088006058).values.activityDurationSeconds.basic.value;
+//             console.log(`Время в Горниле: ${crucibleTime} секунд`);
+//         } else {
+//             console.error('Игрок не найден');
+//         }
+//     } catch (error) {
+//         console.error('Ошибка при запросе данных:', error);
+//     }
+// }
+
+// // Вызов функции при добавлении игрока в команду
+// function addToTeam(player, index) {
+//     getPlayerCrucibleTime(player.name); // Получение времени в Горниле для игрока
+//     // Существующая логика добавления игрока в команду...
+//     if (currentTeamA.length <= currentTeamB.length) {
+//         currentTeamA.push(player);
+//     } else {
+//         currentTeamB.push(player);
+//     }
+
+//     availablePlayers.splice(index, 1);
+//     filterAvailablePlayers();
+//     updateTeam('A', currentTeamA);
+//     updateTeam('B', currentTeamB);
+//     sortTeamsByKD();
+// }

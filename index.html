@@ -20,8 +20,9 @@
                 <div class="dec-container_s dec-color_avl-pl_s"></div>
                 <div class="dec-container_b dec-color_avl-pl_b"></div>
             </div>        
-            <input type="text" id="searchPlayerInput" placeholder="Search by name" oninput="filterAvailablePlayers()" />
-            <div id="availablePlayers"></div>
+            <div class="availablePlayers-input"><input type="text" id="searchPlayerInput" placeholder="Search by name" oninput="filterAvailablePlayers()" /></div>
+            <div id="availablePlayers">
+            </div>
             <div class="addPlayer">
                 <input type="text" class="addPlayer-item" id="playerName" placeholder="Name">
                 <input type="text" class="addPlayer-item" id="playerKDTrials" placeholder="K/D Trials">
@@ -29,7 +30,7 @@
                 <input type="text" class="addPlayer-item" id="clanTag" placeholder="clanTag">
                 <button class="addPlayer-item" onclick="addPlayer()">Add Player</button>
             </div>
-            <textarea id="playerBaseInput" placeholder="Paste your player base here...">garrus#8697	Sky	1.43	1.5
+            <div class="availablePlayers-input"><textarea id="playerBaseInput" placeholder="Paste your player base here...">garrus#8697	Sky	1.43	1.5
 red_threat#8858	Sky	1.29	1.54
 alter#8512	Sky	1.22	1.39
 ll L1ZARD ll#3003	Sky	1.13	1.39
@@ -70,6 +71,7 @@ RekRut×Rash×Yepta#7798	-	0.97	0.99
 Tavigil_22#4956	Sky	0.89	0.91
 GUK#8533	One	0.75	0.94</textarea>
             <button id="importPlayers" onclick="importPlayers()">Import Players</button>
+        </div>
         </div>
 
         <div class="teams">

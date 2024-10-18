@@ -7,6 +7,7 @@ let rerollAttempts = 0;
 
 let currentContextPlayer = null;
 let lockedPlayers = new Set();
+importPlayers()
 
 document.addEventListener('contextmenu', function(event) {
     event.preventDefault();

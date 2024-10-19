@@ -371,6 +371,13 @@ function updateTeam(team, teamArray, previousTeamArray = []) {
         totalKDCrucible += player.kdCrucible;
     });
 
+    for (let i = teamArray.length; i < 6; i++) {
+        const emptySlot = document.createElement('div');
+        emptySlot.className = 'slot';
+        // emptySlot.innerText = `Slot ${i + 1}`;
+        teamDiv.appendChild(emptySlot);
+    }
+
     const avgKDTrials = teamArray.length ? (totalKDTrials / teamArray.length).toFixed(2) : '0.00';
     const avgKDCrucible = teamArray.length ? (totalKDCrucible / teamArray.length).toFixed(2) : '0.00';
 
@@ -379,6 +386,8 @@ function updateTeam(team, teamArray, previousTeamArray = []) {
 
     updateKDDifference();
 }
+
+
 
 function sortTeamsByKD() {
     let isSortByTrials = document.getElementById('btnTrials').classList.contains('checked');

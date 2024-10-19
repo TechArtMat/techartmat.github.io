@@ -411,7 +411,7 @@ input[type=range]::-moz-range-thumb {
     width: 40px;
 }
 
-.player-card + .player-card, .slot + .slot {
+.player-card + .player-card, .slot + .slot, .player-card + .slot {
     margin-top: 8px;
 }
 

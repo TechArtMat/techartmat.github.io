@@ -70,7 +70,7 @@ document.querySelectorAll('.radio-btn').forEach(button => {
         document.querySelectorAll('.radio-btn').forEach(btn => btn.classList.remove('checked'));
         this.classList.add('checked');
         let selectedType = this.getAttribute('data-type');
-        
+        updateSliderLabel();
         handleTypeSelection(selectedType);
     });
 });

@@ -428,6 +428,7 @@ input[type=range]::-moz-range-thumb {
     cursor: pointer;
     max-width: 400px;
     max-height: 40px;
+    transition: background-color 2s ease-out;
     overflow: visible; /* Чтобы бордер выходил за пределы кнопки */
     z-index: 1; /* Чтобы кнопка была поверх бордера */
 }
@@ -463,6 +464,7 @@ input[type=range]::-moz-range-thumb {
 
 .player-card:hover::after {
     transform: scale(1, 1);
+    background-color: rgba(255, 255, 255, 0.25);
     opacity: 1; /* Бордер становится видимым при наведении */
 }
 
@@ -579,11 +581,13 @@ input[type=range]::-moz-range-thumb {
     color: #555;
     cursor: pointer;
     font-weight: bold;
+    height: 40px;
     
 }
 
 .switch-btn:hover {
     color: #333;
+    background-color: rgba(255, 255, 255, 0.25);
 }
 
 /* #sortByTrials {

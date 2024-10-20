@@ -420,7 +420,7 @@ input[type=range]::-moz-range-thumb {
     align-items: center;
     background-color: rgba(92, 92, 92, 0.25);
     backdrop-filter: blur(0.8px);
-
+    
     color: #FFFFFF;
 }
 
@@ -445,11 +445,24 @@ input[type=range]::-moz-range-thumb {
     bottom: -5px;
     border: 3px solid white;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    /* transition: opacity 0.3s ease; */
     z-index: -1; 
+    transform: scale(1.01, 1.10);
+    /* transform: scale(1.01, 1.10); */
+    /* animation-name: borderscale; */
+    /* animation: borderscale 0.2s linear infinite; */
+    
+}
+
+@keyframes borderscale {
+    from {
+    }
+    to {
+    }
 }
 
 .player-card:hover::after {
+    transform: scale(1, 1);
     opacity: 1; /* Бордер становится видимым при наведении */
 }
 

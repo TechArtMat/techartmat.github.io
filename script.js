@@ -105,7 +105,6 @@ function importPlayers() {
     const lines = baseText.split('\n');
 
     lines.forEach(line => {
-        console.log(line)
         if (line.includes('#')) {
             let [name, other] = line.split("#");
             if (!other) return;
@@ -190,8 +189,8 @@ function filterAvailablePlayers() {
 
 function addToTeam(player, index) {
     // getPlayerCrucibleTime(player.name); // Получение времени в Горниле для игрока
-    console.log(player.name);
-    console.log(encodeURIComponent(player.name));
+    // console.log(player.name);
+    // console.log(encodeURIComponent(player.name));
 
     if (currentTeamA.length <= currentTeamB.length) {
         currentTeamA.push(player);
@@ -286,6 +285,7 @@ function rerollTeams() {
         }
     });
 
+    shouldRerollAgain();
     sortTeamsByKD();
     updateTeam('A', currentTeamA, previousTeamA || []);
     updateTeam('B', currentTeamB, previousTeamB || []);
@@ -302,7 +302,7 @@ function lockedPlayersInTeam(team) {
 
 function shouldRerollAgain (){
     document.getElementById('kdDifferenceDisplay').classList.remove('kdDifferenceDisplay-error')
-    const maxRerollCount = 20;
+    const maxRerollCount = 50;
 
     let isSortByTrials = document.getElementById('btnTrials').classList.contains('checked');
     let KDDiff = parseFloat(document.getElementById('kdDiffSlider').value);
@@ -319,20 +319,18 @@ function shouldRerollAgain (){
         if (isSortByTrials){
             if (Math.abs(avgKDTrialsA - avgKDTrialsB) <= KDDiff){
             } else {
-                console.log('Wrong! Again')
                 rerollAttempts++;
-                rerollTeams()
+                rerollTeams();
             }
         } else {
             if (Math.abs(avgKDCrucibleA - avgKDCrucibleB) <= KDDiff){
             } else {
-                console.log('Wrong! Again')
                 rerollAttempts++;
-                rerollTeams()
+                rerollTeams();
             }        
         }
     }
-    
+    rerollAttempts = 0
 }
 
 function updateTeam(team, teamArray, previousTeamArray = []) {

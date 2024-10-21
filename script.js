@@ -7,7 +7,98 @@ let rerollAttempts = 0;
 
 let currentContextPlayer = null;
 let lockedPlayers = new Set();
+
 importPlayers()
+function magneticElementsSelection(){
+    const magneticElements = document.querySelectorAll('.magnetic-element');
+
+    magneticCursor(magneticElements)
+    // magneticEffect(magneticElements)
+}
+
+function magneticEffect (magneticElements){
+
+// const magneticElements = document.querySelectorAll('.magnetic-element');
+const cursor = document.createElement('div');
+cursor.classList.add('cursor');
+document.body.appendChild(cursor);
+
+document.addEventListener('mousemove', (e) => {
+  cursor.style.left = `${e.clientX}px`;
+  cursor.style.top = `${e.clientY}px`;
+
+  magneticElements.forEach(element => {
+    const rect = element.getBoundingClientRect();
+    const elemCenterX = rect.left + rect.width / 2;
+    const elemCenterY = rect.top + rect.height / 2;
+
+    const distanceX = e.clientX - elemCenterX;
+    const distanceY = e.clientY - elemCenterY;
+    const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
+    const strength = 20; // Радиус притяжения
+    if (distance < strength) {
+      const pullStrength = (strength - distance) / strength;
+
+      // Рассчитываем новые позиции курсора (магнитное притяжение)
+      const newCursorX = e.clientX - distanceX * pullStrength * 2;
+      const newCursorY = e.clientY - distanceY * pullStrength * 2;
+
+      cursor.style.left = `${newCursorX}px`;
+      cursor.style.top = `${newCursorY}px`;
+    }
+  });
+});
+
+}
+
+function magneticCursor(magneticElements){
+
+    // const magneticElements = document.querySelectorAll('.magnetic-element');
+    const cursor = document.createElement('div');
+    cursor.classList.add('cursor');
+    document.body.appendChild(cursor);
+    
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = `${e.clientX}px`;
+      cursor.style.top = `${e.clientY}px`;
+    
+      magneticElements.forEach(element => {
+        const rect = element.getBoundingClientRect();
+        
+        // Получаем координаты сторон элемента
+        const elemLeft = rect.left;
+        const elemRight = rect.right;
+        const elemTop = rect.top;
+        const elemBottom = rect.bottom;
+    
+        // Вычисляем минимальное расстояние до сторон элемента
+        const distanceX = Math.min(Math.abs(e.clientX - elemLeft), Math.abs(e.clientX - elemRight));
+        const distanceY = Math.min(Math.abs(e.clientY - elemTop), Math.abs(e.clientY - elemBottom));
+    
+        // Проверяем, близок ли курсор к элементу
+        const strength = 100; // Радиус притяжения
+        const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY); // Дистанция до элемента
+    
+        if (distance < strength) {
+          const pullStrength = (strength - distance) / strength; // Сила притяжения
+    
+          // Рассчитываем сдвиг элемента в зависимости от положения курсора
+          const offsetX = (e.clientX - (rect.left + rect.width / 2)) * pullStrength * 0.105;
+          const offsetY = (e.clientY - (rect.top + rect.height / 2)) * pullStrength * 0.105;
+    
+          // Применяем сдвиг к элементу
+          element.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+        } else {
+          // Возвращаем элемент в исходное положение
+          element.style.transform = 'translate(0, 0)';
+        }
+      });
+    });
+    
+}
+
+// magneticElementsSelection()
 
 document.addEventListener('contextmenu', function(event) {
     event.preventDefault();
@@ -334,6 +425,7 @@ function shouldRerollAgain (){
 }
 
 function updateTeam(team, teamArray, previousTeamArray = []) {
+
     const teamDiv = document.getElementById(`team${team}`);
     teamDiv.innerHTML = '';
 
@@ -373,6 +465,15 @@ function updateTeam(team, teamArray, previousTeamArray = []) {
         const emptySlot = document.createElement('div');
         emptySlot.className = 'slot';
         // emptySlot.innerText = `Slot ${i + 1}`;
+        emptySlot.innerHTML = `
+                            <span class="slot-dec-container">
+                                <div class="slot-dec-tl"></div>
+                                <div class="slot-dec-tr"></div>
+                            </span>
+                            <span class="slot-dec-container">
+                                <div class="slot-dec-bl"></div>
+                                <div class="slot-dec-br"></div>
+                            </span>`
         teamDiv.appendChild(emptySlot);
     }
 

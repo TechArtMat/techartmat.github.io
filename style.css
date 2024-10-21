@@ -19,19 +19,34 @@ body {
     position: relative;
 }
 
+.cursor {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: red;
+  position: fixed;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
+.magnetic-element {
+    transition: transform 0.3s ease;
+  }
+
 .arrows {
-    /* background-image: url("background/T_D2_StartScreen_02_4k_Arrows.png"); */
+    background-image: url("background/T_D2_StartScreen_02_4k_Arrows.png");
     animation-name: spin;
     animation: spin 450s linear infinite;
     
 }
 
 .static-rectangles {
-    /* background-image: url("background/T_D2_StartScreen_Static_Rectangles.png"); */
+    background-image: url("background/T_D2_StartScreen_Static_Rectangles.png");
 }
 
 .anim-circle-sm {
-    /* background-image: url("background/T_D2_StartScreen_Anim_Circle_Small.png"); */
+    background-image: url("background/T_D2_StartScreen_Anim_Circle_Small.png");
     animation-name: spin;
     animation: spin 450s linear infinite;
 }
@@ -104,9 +119,9 @@ body {
     text-align: center;
     margin: 0;
 }
-.availablePlayers-container {
-    /* max-width: 400px; */
-}
+/* .availablePlayers-container {
+    max-width: 400px;
+} */
 
 .availablePlayers-container > * {
     padding: 0 10px;
@@ -425,12 +440,33 @@ input[type=range]::-moz-range-thumb {
 }
 
 .player-card {
+    position: relative;
     cursor: pointer;
     max-width: 400px;
     max-height: 40px;
-    transition: background-color 2s ease-out;
-    overflow: visible; /* Чтобы бордер выходил за пределы кнопки */
-    z-index: 1; /* Чтобы кнопка была поверх бордера */
+    /* transition: background-color 2s ease-out; */
+    overflow: visible;
+    z-index: 1;
+    /* animation: none; */
+    background-color: rgba(92, 92, 92, 0.25);
+    border: 0px solid white;
+}
+
+.player-card::before {
+    content: '';
+    position: absolute;
+    /* border: 10px solid white; */
+    opacity: 0;
+    z-index: 1; 
+
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+
+    /* transition: border 1.2 ease-out; */
+    border: 0px solid rgb(255, 0, 0);
+    /* transform: scale(1.00,.9); */
 }
 
 .player-card.locked {
@@ -440,43 +476,162 @@ input[type=range]::-moz-range-thumb {
 .player-card::after {
     content: '';
     position: absolute;
-    top: -5px;
-    left: -5px;
-    right: -5px;
-    bottom: -5px;
-    border: 3px solid white;
+    top: -6px;
+    left: -6px;
+    right: -6px;
+    bottom: -6px;
+    /* border: 10px solid white; */
     opacity: 0;
-    /* transition: opacity 0.3s ease; */
     z-index: -1; 
-    transform: scale(1.01, 1.10);
     /* transform: scale(1.01, 1.10); */
-    /* animation-name: borderscale; */
-    /* animation: borderscale 0.2s linear infinite; */
+    /* transition: all 0.203s ease-out; */
+}
+
+@keyframes BorderfadeInUp {
+    0% {
+        opacity: 1;
+        border: 0px solid white;
+        /* transform: scale(1.05, 1.405); */
+        /* scale: 1.05; */
+    }
+    100% {
+        border: 2px solid white;
+        opacity: 1;
+        /* transform: scale(1.005, 1.05); */
+        /* scale: 1; */
+    }
+}
+
+@keyframes BorderfadeOutDown {
+    0% {
+        border: 2px solid white;
+        opacity: 1;
+        /* transform: scale(1.0, 1.0); */
+    }
+    100% {
+        opacity: 0;
+        border: 0px solid white;
+        /* transform: scale(1.05, 1.405); */
+        /* transform: scale(0, 0); */
+
+    }
+  }
     
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        border: 8px solid white;
+        background-color: rgba(92, 92, 92, 0.25);
+        transform: scale(1.05, 1.405);
+        /* scale: 1.05; */
+    }
+    50% {
+        opacity: 0.2;
+        border: 5px solid white;
+        background-color: rgba(255, 255, 255, 0.25);
+        /* scale: 1; */
+    }
+    100% {
+        border: 4px solid white;
+        background-color: rgba(255, 255, 255, 0.25);
+        opacity: 1;
+        transform: scale(1.005, 1.05);
+        /* scale: 1; */
+    }
 }
 
-@keyframes borderscale {
-    from {
+/* Анимация скрытия */
+@keyframes fadeOutDown {
+    0% {
+        border: 4px solid white;
+        background-color: rgba(255, 255, 255, 0.25);
+        opacity: 1;
+        transform: scale(1.0, 1.0);
     }
-    to {
+    50% {
+        opacity: 0.01;
+        border: 5px solid white;
+        background-color: rgba(255, 255, 255, 0.25);
+        transform: scale(1.025, 1.205);
+        /* scale: 1; */
     }
-}
+    100% {
+        opacity: 0;
+        border: 0px solid white;
+        background-color: rgba(92, 92, 92, 0.25);
+        /* transform: scale(1.05, 1.405); */
+        transform: scale(0, 0);
 
-.player-card:hover::after {
-    transform: scale(1, 1);
-    background-color: rgba(255, 255, 255, 0.25);
-    opacity: 1; /* Бордер становится видимым при наведении */
-}
+    }
+  }
+  
+  
+  .player-card:hover::after {
+    animation: fadeInUp 0.3s forwards;
+    /* display: block; */
+  }
+  
+  .player-card::after {
+    animation: fadeOutDown 0.5s forwards;
+    /* display: none; */
+  }
+ 
+  .player-card:hover::before {
+    animation: BorderfadeInUp 0.105s forwards;
+    /* display: block; */
+  }
+  
+  .player-card::before {
+    animation: BorderfadeOutDown 0.105s forwards;
+    /* display: none; */
+  }
 
 .slot {
     max-width: 400px;
-    height: 38px;
-    max-height: 38px;
-    border: 1px rgba(0, 0, 0, 0.103) solid;
+    background-image: url('img/button/T_Rect.png');
+    height: 40px;
+    max-height: 40px;
+    /* border: 1px rgba(0, 0, 0, 0.103) solid; */
     display: flex;
-    justify-content: center;
-    align-items: center;
+    /* justify-content: center; */
+    /* align-items: center; */
     visibility: visible;  
+    flex-direction: column;
+    opacity: 0.5;
+}
+
+.slot-dec-container {
+    width: 400px;
+}
+
+.slot-dec-container + .slot-dec-container {
+    margin-top: auto;
+}
+
+.slot-dec-bl, .slot-dec-br, 
+.slot-dec-tl, .slot-dec-tr {
+    height: 10px;
+    width: 10px;
+}
+
+.slot-dec-tl {
+    background-image: url('img/button/T_Top_Left.png');
+    float: left;
+}
+
+.slot-dec-tr {
+    background-image: url('img/button/T_Top_Right.png');
+    float: right;
+}
+
+.slot-dec-bl {
+    background-image: url('img/button/T_Bottom_Left.png');
+    float: left;
+}
+
+.slot-dec-br {
+    background-image: url('img/button/T_Bottom_Right.png');
+    float: right;
 }
 
 .slot.filled {
@@ -494,11 +649,6 @@ input[type=range]::-moz-range-thumb {
     margin-left: auto;
     margin-right: 40px;
     text-align: center;
-    /* align-items: center; */
-    /* height: inherit; */
-    /* display: flex; */
-    /* flex-direction: row; */
-    /* margin-left: auto; */
 }
 
 .player-card button {
@@ -506,8 +656,10 @@ input[type=range]::-moz-range-thumb {
 }
 
 .player-avatar {
-    width: 40px;
     height: 40px;
+    width: 40px;
+    /* max-width: 40px;
+    max-height: 40px; */
     background-color: #738EA7;
     grid-area: a;
     float: left;
@@ -582,7 +734,8 @@ input[type=range]::-moz-range-thumb {
     cursor: pointer;
     font-weight: bold;
     height: 40px;
-    
+    overflow: visible;
+    z-index: 1;
 }
 
 .switch-btn:hover {
@@ -593,3 +746,4 @@ input[type=range]::-moz-range-thumb {
 /* #sortByTrials {
 
 } */
+  

@@ -34,11 +34,12 @@ body {
     transition: transform 0.3s ease;
   }
 
-.arrows {
+/* .arrows {
     background-image: url("background/T_D2_StartScreen_02_4k_Arrows.png");
     animation-name: spin;
     animation: spin 450s linear infinite;
-    
+    will-change: transform;
+    backface-visibility: hidden;
 }
 
 .static-rectangles {
@@ -49,24 +50,21 @@ body {
     background-image: url("background/T_D2_StartScreen_Anim_Circle_Small.png");
     animation-name: spin;
     animation: spin 450s linear infinite;
-}
+    will-change: transform;
+    backface-visibility: hidden;
+} */
 
 .dec {
     position: fixed;
     height: 8300px;
     width: 8300px;
-    /* background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center; */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     width: 100vw;
     height: 100vh;
     pointer-events: none;
-    /* animation-duration: 5000ms;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear; */
+    will-change: transform;
 }
 
 @keyframes spin {
@@ -487,6 +485,10 @@ input[type=range]::-moz-range-thumb {
     /* transition: all 0.203s ease-out; */
 }
 
+.anim-none {
+    animation: none;
+}
+
 @keyframes BorderfadeInUp {
     0% {
         opacity: 1;
@@ -566,7 +568,7 @@ input[type=range]::-moz-range-thumb {
   }
   
   
-  .player-card:hover::after {
+  .player-card.hovered::after {
     animation: fadeInUp 0.3s forwards;
     /* display: block; */
   }
@@ -576,7 +578,7 @@ input[type=range]::-moz-range-thumb {
     /* display: none; */
   }
  
-  .player-card:hover::before {
+  .player-card.hovered::before {
     animation: BorderfadeInUp 0.105s forwards;
     /* display: block; */
   }

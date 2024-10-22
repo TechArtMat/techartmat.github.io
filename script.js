@@ -9,96 +9,43 @@ let currentContextPlayer = null;
 let lockedPlayers = new Set();
 
 importPlayers()
-function magneticElementsSelection(){
-    const magneticElements = document.querySelectorAll('.magnetic-element');
+function onHover(){
+    // Получаем все карточки
+const playerCards = document.querySelectorAll('.player-card');
 
-    magneticCursor(magneticElements)
-    // magneticEffect(magneticElements)
-}
+// Функция для добавления анимации при наведении
+playerCards.forEach((card) => {
+  card.addEventListener('mouseenter', () => {
+    // Добавляем анимацию для ::after и ::before
+    card.classList.add('hovered');
 
-function magneticEffect (magneticElements){
+    // Удаляем завершающие анимации после выполнения
+    const afterElement = card.querySelector('::after');
+    const beforeElement = card.querySelector('::before');
 
-// const magneticElements = document.querySelectorAll('.magnetic-element');
-const cursor = document.createElement('div');
-cursor.classList.add('cursor');
-document.body.appendChild(cursor);
+    // Отслеживаем завершение анимации для ::after
+    card.addEventListener('animationend', (event) => {
+      if (event.animationName === 'fadeOutDown') {
+        card.classList.remove('hovered'); // Убираем класс, когда анимация закончена
+      }
+    });
+    
+    // Отслеживаем завершение анимации для ::before
+    card.addEventListener('animationend', (event) => {
+      if (event.animationName === 'BorderfadeOutDown') {
+        card.classList.remove('hovered'); // Убираем класс для границы
+      }
+    });
+  });
 
-document.addEventListener('mousemove', (e) => {
-  cursor.style.left = `${e.clientX}px`;
-  cursor.style.top = `${e.clientY}px`;
-
-  magneticElements.forEach(element => {
-    const rect = element.getBoundingClientRect();
-    const elemCenterX = rect.left + rect.width / 2;
-    const elemCenterY = rect.top + rect.height / 2;
-
-    const distanceX = e.clientX - elemCenterX;
-    const distanceY = e.clientY - elemCenterY;
-    const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-
-    const strength = 20; // Радиус притяжения
-    if (distance < strength) {
-      const pullStrength = (strength - distance) / strength;
-
-      // Рассчитываем новые позиции курсора (магнитное притяжение)
-      const newCursorX = e.clientX - distanceX * pullStrength * 2;
-      const newCursorY = e.clientY - distanceY * pullStrength * 2;
-
-      cursor.style.left = `${newCursorX}px`;
-      cursor.style.top = `${newCursorY}px`;
-    }
+  // Снятие анимации при уходе курсора
+  card.addEventListener('mouseleave', () => {
+    card.classList.remove('hovered'); // Удаляем класс hover
   });
 });
 
 }
 
-function magneticCursor(magneticElements){
-
-    // const magneticElements = document.querySelectorAll('.magnetic-element');
-    const cursor = document.createElement('div');
-    cursor.classList.add('cursor');
-    document.body.appendChild(cursor);
-    
-    document.addEventListener('mousemove', (e) => {
-      cursor.style.left = `${e.clientX}px`;
-      cursor.style.top = `${e.clientY}px`;
-    
-      magneticElements.forEach(element => {
-        const rect = element.getBoundingClientRect();
-        
-        // Получаем координаты сторон элемента
-        const elemLeft = rect.left;
-        const elemRight = rect.right;
-        const elemTop = rect.top;
-        const elemBottom = rect.bottom;
-    
-        // Вычисляем минимальное расстояние до сторон элемента
-        const distanceX = Math.min(Math.abs(e.clientX - elemLeft), Math.abs(e.clientX - elemRight));
-        const distanceY = Math.min(Math.abs(e.clientY - elemTop), Math.abs(e.clientY - elemBottom));
-    
-        // Проверяем, близок ли курсор к элементу
-        const strength = 100; // Радиус притяжения
-        const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY); // Дистанция до элемента
-    
-        if (distance < strength) {
-          const pullStrength = (strength - distance) / strength; // Сила притяжения
-    
-          // Рассчитываем сдвиг элемента в зависимости от положения курсора
-          const offsetX = (e.clientX - (rect.left + rect.width / 2)) * pullStrength * 0.105;
-          const offsetY = (e.clientY - (rect.top + rect.height / 2)) * pullStrength * 0.105;
-    
-          // Применяем сдвиг к элементу
-          element.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-        } else {
-          // Возвращаем элемент в исходное положение
-          element.style.transform = 'translate(0, 0)';
-        }
-      });
-    });
-    
-}
-
-// magneticElementsSelection()
 
 document.addEventListener('contextmenu', function(event) {
     event.preventDefault();
@@ -283,6 +230,7 @@ function addToTeam(player, index) {
     // console.log(player.name);
     // console.log(encodeURIComponent(player.name));
 
+
     if (currentTeamA.length <= currentTeamB.length) {
         currentTeamA.push(player);
     } else {
@@ -293,8 +241,30 @@ function addToTeam(player, index) {
     filterAvailablePlayers();
     updateTeam('A', currentTeamA);
     updateTeam('B', currentTeamB);
-    sortTeamsByKD()
+    sortTeamsByKD();
+    onHover()
+    
 }
+
+function clearAnimationOnClick(){
+    document.addEventListener('DOMContentLoaded', function() {
+        const playerCards = document.querySelectorAll('.player-card');
+      
+        playerCards.forEach(card => {
+          card.addEventListener('click', function() {
+            // Удаление анимации только для текущей карточки
+            card.classList.remove('hovered');
+            
+            // Принудительное пересчитывание (чтобы сбросить анимацию)
+            void card.offsetWidth;
+            
+            // Добавление анимации только на эту карточку
+            card.classList.add('hovered');
+          });
+        });
+      });
+}
+
 
 function updateKDDifference() {
     const avgKDTrialsA = parseFloat(document.getElementById('avgKDTrialsA').innerText);
@@ -380,6 +350,7 @@ function rerollTeams() {
     sortTeamsByKD();
     updateTeam('A', currentTeamA, previousTeamA || []);
     updateTeam('B', currentTeamB, previousTeamB || []);
+    onHover()
 }
 
 function lockedPlayersInTeam(team) {
@@ -439,7 +410,8 @@ function updateTeam(team, teamArray, previousTeamArray = []) {
             ? !previousTeamArray.some(prevPlayer => prevPlayer && prevPlayer.name === player.name)
             : false;
 
-        const playerCard = createPlayerCard(player, index, true, team, oppositeTeam);
+        const animationState = 'anim-none';
+        const playerCard = createPlayerCard(player, index, true, team, oppositeTeam, animationState);
 
         const playerAvatar = playerCard.querySelector('.player-avatar');
         
@@ -534,9 +506,10 @@ function calculateAverageKD(team, type) {
     return (team.length > 0) ? (totalKD / team.length) : 0;
 }
 
-function createPlayerCard(player, index, inTeam = false, team = '', oppositeTeam = '') {
+function createPlayerCard(player, index, inTeam = false, team = '', oppositeTeam = '', animationState) {
     const playerCard = document.createElement('div');
     playerCard.className = 'player-card';
+    playerCard.classList.add(animationState);
 
     playerCard.innerHTML = `
         <div class="player-avatar"></div>
@@ -613,57 +586,4 @@ function takeScreenshot() {
     
 }
 
-//
-
-// Добавление функции для запроса данных из Bungie API
-// async function getPlayerCrucibleTime(displayName, membershipType = 0) {
-//     const apiKey = '4cd10d4ca2b44e438c20967dc56d1ec1';
-//     try {
-//         // Запрос на поиск игрока по имени
-//         const playerResponse = await fetch(`https://www.bungie.net/Platform/Destiny2/SearchDestinyPlayer/${membershipType}/${encodeURIComponent(displayName)}/`, {
-//             method: 'GET',
-//             headers: {
-//                 'X-API-Key': apiKey
-//             }
-//         });
-//         const playerData = await playerResponse.json();
-
-//         if (playerData.Response && playerData.Response.length > 0) {
-//             const membershipId = playerData.Response[0].membershipId;
-
-//             // Запрос на получение данных о профиле игрока
-//             const profileResponse = await fetch(`https://www.bungie.net/Platform/Destiny2/3/Profile/${membershipId}/?components=202`, {
-//                 method: 'GET',
-//                 headers: {
-//                     'X-API-Key': apiKey
-//                 }
-//             });
-//             const profileData = await profileResponse.json();
-
-//             // Извлечение времени в Горниле
-//             const crucibleTime = profileData.Response.characterActivities.data[0].activities.find(activity => activity.activityHash === 4088006058).values.activityDurationSeconds.basic.value;
-//             console.log(`Время в Горниле: ${crucibleTime} секунд`);
-//         } else {
-//             console.error('Игрок не найден');
-//         }
-//     } catch (error) {
-//         console.error('Ошибка при запросе данных:', error);
-//     }
-// }
-
-// // Вызов функции при добавлении игрока в команду
-// function addToTeam(player, index) {
-//     getPlayerCrucibleTime(player.name); // Получение времени в Горниле для игрока
-//     // Существующая логика добавления игрока в команду...
-//     if (currentTeamA.length <= currentTeamB.length) {
-//         currentTeamA.push(player);
-//     } else {
-//         currentTeamB.push(player);
-//     }
-
-//     availablePlayers.splice(index, 1);
-//     filterAvailablePlayers();
-//     updateTeam('A', currentTeamA);
-//     updateTeam('B', currentTeamB);
-//     sortTeamsByKD();
-// }
+onHover()

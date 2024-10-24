@@ -10,86 +10,55 @@ let lockedPlayers = new Set();
 
 importPlayers()
 
-function onHover(){
-    // Получаем все карточки
-const playerCards = document.querySelectorAll('.player-card');
+// function onHover(){
+//     // Получаем все карточки
+// const playerCards = document.querySelectorAll('.player-card');
 
-// Функция для добавления анимации при наведении
-playerCards.forEach((card) => {
-  card.addEventListener('mouseenter', () => {
-    // Добавляем анимацию для ::after и ::before
-    card.classList.add('hovered');
+// playerCards.forEach((card) => {
+//   card.addEventListener('mouseenter', () => {
+//     card.classList.add('hovered');
 
-    // Удаляем завершающие анимации после выполнения
-    const afterElement = card.querySelector('::after');
-    const beforeElement = card.querySelector('::before');
+//     const afterElement = card.querySelector('::after');
+//     const beforeElement = card.querySelector('::before');
 
-    // Отслеживаем завершение анимации для ::after
-    card.addEventListener('animationend', (event) => {
-      if (event.animationName === 'fadeOutDown') {
-        card.classList.remove('hovered'); // Убираем класс, когда анимация закончена
-      }
-    });
+//     card.addEventListener('animationend', (event) => {
+//       if (event.animationName === 'fadeOutDown') {
+//         card.classList.remove('hovered');
+//       }
+//     });
     
-    // Отслеживаем завершение анимации для ::before
-    card.addEventListener('animationend', (event) => {
-      if (event.animationName === 'BorderfadeOutDown') {
-        card.classList.remove('hovered'); // Убираем класс для границы
-      }
-    });
-  });
+//     card.addEventListener('animationend', (event) => {
+//       if (event.animationName === 'BorderfadeOutDown') {
+//         card.classList.remove('hovered');
+//     });
+//   });
 
-  // Снятие анимации при уходе курсора
-  card.addEventListener('mouseleave', () => {
-    card.classList.remove('hovered'); // Удаляем класс hover
-  });
-});
-
-}
-
-
-
-function handleCardClick(card) {
-    // Добавляем класс для скрытия ::after и ::before
-    card.classList.add('anim-none');
-    
-    // Ждём завершения анимации, чтобы вернуть прозрачность обратно
-    card.addEventListener('animationend', (event) => {
-        // Проверяем, что анимация закончилась на нужных элементах
-        if (event.animationName === 'fadeInUp' || event.animationName === 'BorderfadeInUp') {
-            // Убираем класс для возврата прозрачности
-            card.classList.remove('anim-none');
-        }
-        
-    }, { once: true });  // Обработчик выполнится только один раз для каждой анимации
-}
-
-// Добавляем обработчик на клик для всех карточек
-document.querySelectorAll('.player-card').forEach((card) => {
-    card.addEventListener('click', () => handleCardClick(card));
-});
-
-
-
-// document.addEventListener('contextmenu', function(event) {
-//     event.preventDefault();
-
-//     const playerCard = event.target.closest('.player-card');
-//     if (playerCard) {
-//         currentContextPlayer = playerCard;
-//         const playerName = playerCard.querySelector('.player-name').innerText;
-
-//         const lockButton = document.getElementById('lockPlayerBtn');
-//         if (lockedPlayers.has(playerName)) {
-//             lockButton.innerText = 'Unlock';
-//             lockButton.innerText = 'Lock';
-//         }
-
-//         showContextMenu(event.pageX, event.pageY);
-//     } else {
-//         hideContextMenu();
-//     }
+//   card.addEventListener('mouseleave', () => {
+//     card.classList.remove('hovered');
+//   });
 // });
+// }
+
+document.addEventListener('contextmenu', function(event) {
+    event.preventDefault();
+    
+    const playerCard = event.target.closest('.player-card');
+    if (playerCard) {
+        currentContextPlayer = playerCard;
+        const playerName = playerCard.querySelector('.player-name').innerText;
+        
+        const lockButton = document.getElementById('lockPlayerBtn');
+        if (lockedPlayers.has(playerName)) {
+            lockButton.innerText = 'Unlock';
+        } else {
+            lockButton.innerText = 'Lock';
+        }
+
+        showContextMenu(event.pageX, event.pageY);
+    } else {
+        hideContextMenu();
+    }
+});
 
 function showContextMenu(x, y) {
     const menu = document.getElementById('contextMenu');
@@ -266,7 +235,6 @@ function addToTeam(player, index) {
     updateTeam('A', currentTeamA);
     updateTeam('B', currentTeamB);
     sortTeamsByKD();
-    // onHover()
     
 }
 
@@ -318,7 +286,6 @@ function switchPlayerTeam(currentTeam, oppositeTeam, index) {
     updateTeam(currentTeam, currentTeamArray);
     updateTeam(oppositeTeam, oppositeTeamArray);
     sortTeamsByKD()
-    // onHover()
 }
 
 function rerollTeams() {
@@ -369,13 +336,29 @@ function rerollTeams() {
                 }
             }
         }
+        
     });
 
     shouldRerollAgain();
     sortTeamsByKD();
     updateTeam('A', currentTeamA, previousTeamA || []);
     updateTeam('B', currentTeamB, previousTeamB || []);
-    onHover()
+
+    const teamWrapper = document.querySelector('.team-wrapper');
+
+    // Находим все карточки игроков внутри team-wrapper
+    const playerCards = teamWrapper.querySelectorAll('.player-card');
+
+    // Удаляем класс anim-none у каждой карточки с таймаутом
+ 
+    playerCards.forEach((card) => {
+        card.addEventListener('animationend', () => {
+            setTimeout(() => {
+                card.classList.remove('anim-none'); // Убираем класс, когда анимация закончена
+            }, 100)
+        });
+    })
+    // onHover()
 }
 
 function lockedPlayersInTeam(team) {
@@ -435,10 +418,7 @@ function updateTeam(team, teamArray, previousTeamArray = []) {
             ? !previousTeamArray.some(prevPlayer => prevPlayer && prevPlayer.name === player.name)
             : false;
 
-        // const animationState = 'anim-none';
-        // const playerCard = createPlayerCard(player, index, true, team, oppositeTeam, animationState);
         const playerCard = createPlayerCard(player, index, true, team, oppositeTeam);
-        handleCardClick(playerCard);
         const playerAvatar = playerCard.querySelector('.player-avatar');
         
         if (playerMoved && playerAvatar) {
@@ -453,6 +433,20 @@ function updateTeam(team, teamArray, previousTeamArray = []) {
             playerCard.style.backgroundColor = '';
         }
 
+        if (playerMoved) {
+            playerCard.classList.add('border-fade-in');
+            
+            setTimeout(() => {
+                playerCard.classList.remove('border-fade-in');
+                playerCard.classList.add('border-fade-out');
+
+                setTimeout(() => {
+                    playerCard.classList.remove('border-fade-out');
+                    playerCard.classList.add('anim-none');
+                }, 200);
+            }, 400);
+        }
+        
         teamDiv.appendChild(playerCard);
 
         totalKDTrials += player.kdTrials;
@@ -462,7 +456,6 @@ function updateTeam(team, teamArray, previousTeamArray = []) {
     for (let i = teamArray.length; i < 6; i++) {
         const emptySlot = document.createElement('div');
         emptySlot.className = 'slot';
-        // emptySlot.innerText = `Slot ${i + 1}`;
         emptySlot.innerHTML = `
                             <span class="slot-dec-container">
                                 <div class="slot-dec-tl"></div>
@@ -475,7 +468,6 @@ function updateTeam(team, teamArray, previousTeamArray = []) {
         teamDiv.appendChild(emptySlot);
     }
 
-
     const avgKDTrials = teamArray.length ? (totalKDTrials / teamArray.length).toFixed(2) : '0.00';
     const avgKDCrucible = teamArray.length ? (totalKDCrucible / teamArray.length).toFixed(2) : '0.00';
 
@@ -483,7 +475,6 @@ function updateTeam(team, teamArray, previousTeamArray = []) {
     document.getElementById(`avgKDCrucible${team}`).innerText = avgKDCrucible;
 
     updateKDDifference();
-    onHover();
 }
 
 
@@ -574,12 +565,11 @@ function createPlayerCard(player, index, inTeam = false, team = '', oppositeTeam
         playerCard.onclick = () => addToTeam(player, index);
     }
 
-    const animationDuration = 200; // Длительность анимации в миллисекундах (например, 300мс)
+    const animationDuration = 200;
     setTimeout(() => {
         playerCard.classList.remove('anim-none');
     }, animationDuration);
-    onHover()
-
+    
     return playerCard;
 }
 
@@ -619,5 +609,3 @@ function takeScreenshot() {
     });
     
 }
-
-// onHover()

@@ -504,12 +504,57 @@ input[type=range]::-moz-range-thumb {
 .player-card.anim-none::after,
 .player-card.anim-none::before {
     opacity: 0 !important;
+    /* animation: none !important; */
 }
 
+.animate-border-fade-in::before {
+    animation: BorderTopFadeInUp 0.5s forwards;
+}
 
-@keyframes BorderfadeInUp {
+.animate-border-fade-out::before {
+    animation: BorderTopFadeOutDown 0.5s forwards;
+}
+
+@keyframes BorderTopFadeInUp {
     0% {
         opacity: 1;
+        border-top: 0px solid white;
+        z-index: 0;
+        /* transform: scale(1.05, 1.405); */
+        /* scale: 1.05; */
+    }
+    10% {
+        z-index: 100;
+    }
+    100% {
+        border-top: 42px solid white;
+        opacity: 1;
+        z-index: 100;
+        /* transform: scale(1.005, 1.05); */
+        /* scale: 1; */
+    }
+}
+
+@keyframes BorderTopFadeOutDown {
+    0% {
+        opacity: 1;
+        border-top: 42px solid white;
+        z-index: 100;
+        /* transform: scale(1.05, 1.405); */
+        /* scale: 1.05; */
+    }
+    100% {
+        border-top: 0px solid white;
+        opacity: 1;
+        z-index: 0;
+        /* transform: scale(1.005, 1.05); */
+        /* scale: 1; */
+    }
+}
+
+@keyframes BorderFadeInUp {
+    0% {
+        opacity: 0;
         border: 0px solid white;
         /* transform: scale(1.05, 1.405); */
         /* scale: 1.05; */
@@ -522,7 +567,7 @@ input[type=range]::-moz-range-thumb {
     }
 }
 
-@keyframes BorderfadeOutDown {
+@keyframes BorderFadeOutDown {
     0% {
         border: 2px solid white;
         opacity: 1;
@@ -584,26 +629,34 @@ input[type=range]::-moz-range-thumb {
 
     }
   }
+
+
+
+
+.player-card.border-fade-in::before {
+    animation: BorderTopFadeInUp 0.5s forwards;
+}
+
+.player-card.border-fade-out::before {
+    animation: BorderTopFadeOutDown 0.5s forwards;
+}
+
   
   
-  .player-card.hovered::after {
+  .player-card:hover::after {
     animation: fadeInUp 0.3s forwards;
-    /* display: block; */
   }
   
   .player-card::after {
     animation: fadeOutDown 0.5s forwards;
-    /* display: none; */
   }
  
-  .player-card.hovered::before {
-    animation: BorderfadeInUp 0.105s forwards;
-    /* display: block; */
+  .player-card:hover::before {
+    animation: BorderFadeInUp 0.06s forwards;
   }
   
   .player-card::before {
-    animation: BorderfadeOutDown 0.105s forwards;
-    /* display: none; */
+    animation: BorderFadeOutDown 0.105s forwards;
   }
 
 .slot {

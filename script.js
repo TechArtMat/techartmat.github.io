@@ -9,6 +9,7 @@ let currentContextPlayer = null;
 let lockedPlayers = new Set();
 
 importPlayers()
+
 function onHover(){
     // Получаем все карточки
 const playerCards = document.querySelectorAll('.player-card');
@@ -47,25 +48,48 @@ playerCards.forEach((card) => {
 }
 
 
-document.addEventListener('contextmenu', function(event) {
-    event.preventDefault();
 
-    const playerCard = event.target.closest('.player-card');
-    if (playerCard) {
-        currentContextPlayer = playerCard;
-        const playerName = playerCard.querySelector('.player-name').innerText;
-
-        const lockButton = document.getElementById('lockPlayerBtn');
-        if (lockedPlayers.has(playerName)) {
-            lockButton.innerText = 'Unlock';
-            lockButton.innerText = 'Lock';
+function handleCardClick(card) {
+    // Добавляем класс для скрытия ::after и ::before
+    card.classList.add('anim-none');
+    
+    // Ждём завершения анимации, чтобы вернуть прозрачность обратно
+    card.addEventListener('animationend', (event) => {
+        // Проверяем, что анимация закончилась на нужных элементах
+        if (event.animationName === 'fadeInUp' || event.animationName === 'BorderfadeInUp') {
+            // Убираем класс для возврата прозрачности
+            card.classList.remove('anim-none');
         }
+        
+    }, { once: true });  // Обработчик выполнится только один раз для каждой анимации
+}
 
-        showContextMenu(event.pageX, event.pageY);
-    } else {
-        hideContextMenu();
-    }
+// Добавляем обработчик на клик для всех карточек
+document.querySelectorAll('.player-card').forEach((card) => {
+    card.addEventListener('click', () => handleCardClick(card));
 });
+
+
+
+// document.addEventListener('contextmenu', function(event) {
+//     event.preventDefault();
+
+//     const playerCard = event.target.closest('.player-card');
+//     if (playerCard) {
+//         currentContextPlayer = playerCard;
+//         const playerName = playerCard.querySelector('.player-name').innerText;
+
+//         const lockButton = document.getElementById('lockPlayerBtn');
+//         if (lockedPlayers.has(playerName)) {
+//             lockButton.innerText = 'Unlock';
+//             lockButton.innerText = 'Lock';
+//         }
+
+//         showContextMenu(event.pageX, event.pageY);
+//     } else {
+//         hideContextMenu();
+//     }
+// });
 
 function showContextMenu(x, y) {
     const menu = document.getElementById('contextMenu');
@@ -294,6 +318,7 @@ function switchPlayerTeam(currentTeam, oppositeTeam, index) {
     updateTeam(currentTeam, currentTeamArray);
     updateTeam(oppositeTeam, oppositeTeamArray);
     sortTeamsByKD()
+    onHover()
 }
 
 function rerollTeams() {
@@ -410,9 +435,10 @@ function updateTeam(team, teamArray, previousTeamArray = []) {
             ? !previousTeamArray.some(prevPlayer => prevPlayer && prevPlayer.name === player.name)
             : false;
 
-        const animationState = 'anim-none';
-        const playerCard = createPlayerCard(player, index, true, team, oppositeTeam, animationState);
-
+        // const animationState = 'anim-none';
+        // const playerCard = createPlayerCard(player, index, true, team, oppositeTeam, animationState);
+        const playerCard = createPlayerCard(player, index, true, team, oppositeTeam);
+        handleCardClick(playerCard);
         const playerAvatar = playerCard.querySelector('.player-avatar');
         
         if (playerMoved && playerAvatar) {
@@ -449,11 +475,11 @@ function updateTeam(team, teamArray, previousTeamArray = []) {
         teamDiv.appendChild(emptySlot);
     }
 
-    const avgKDTrials = teamArray.length ? (totalKDTrials / teamArray.length).toFixed(2) : '0.00';
-    const avgKDCrucible = teamArray.length ? (totalKDCrucible / teamArray.length).toFixed(2) : '0.00';
+    // const avgKDTrials = teamArray.length ? (totalKDTrials / teamArray.length).toFixed(2) : '0.00';
+    // const avgKDCrucible = teamArray.length ? (totalKDCrucible / teamArray.length).toFixed(2) : '0.00';
 
-    document.getElementById(`avgKDTrials${team}`).innerText = avgKDTrials;
-    document.getElementById(`avgKDCrucible${team}`).innerText = avgKDCrucible;
+    // document.getElementById(`avgKDTrials${team}`).innerText = avgKDTrials;
+    // document.getElementById(`avgKDCrucible${team}`).innerText = avgKDCrucible;
 
     updateKDDifference();
 }
@@ -506,10 +532,10 @@ function calculateAverageKD(team, type) {
     return (team.length > 0) ? (totalKD / team.length) : 0;
 }
 
-function createPlayerCard(player, index, inTeam = false, team = '', oppositeTeam = '', animationState) {
+function createPlayerCard(player, index, inTeam = false, team = '', oppositeTeam = '') {
     const playerCard = document.createElement('div');
-    playerCard.className = 'player-card';
-    playerCard.classList.add(animationState);
+    playerCard.className = 'player-card anim-none';
+    // playerCard.classList.add(animationState);
 
     playerCard.innerHTML = `
         <div class="player-avatar"></div>
@@ -545,6 +571,11 @@ function createPlayerCard(player, index, inTeam = false, team = '', oppositeTeam
         playerCard.appendChild(switchButton);
         playerCard.onclick = () => addToTeam(player, index);
     }
+
+    const animationDuration = 200; // Длительность анимации в миллисекундах (например, 300мс)
+    setTimeout(() => {
+        playerCard.classList.remove('anim-none');
+    }, animationDuration);
 
     return playerCard;
 }

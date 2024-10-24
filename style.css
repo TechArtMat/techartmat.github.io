@@ -244,9 +244,21 @@ body {
     display: inline;
     /* display: flex; */
     /* justify-content: center; */
+    position: relative;
 }
 
-.tools-btn:hover, .addPlayer > button:hover {
+.radio-btn-dec {
+    position: absolute;
+    display: flex;
+    max-width: 80px;
+    max-height: 80px;
+    background-color: red;
+    top: 0px;
+    /* z-index: -1; */
+    border: 5px solid blue;
+}
+
+.tools2btn:hover, .addPlayer > button:hover {
     background-color: #c2c2c2;
 }
 
@@ -485,9 +497,15 @@ input[type=range]::-moz-range-thumb {
     /* transition: all 0.203s ease-out; */
 }
 
-.anim-none {
+/* .anim-none {
     animation: none;
+} */
+
+.player-card.anim-none::after,
+.player-card.anim-none::before {
+    opacity: 0 !important;
 }
+
 
 @keyframes BorderfadeInUp {
     0% {

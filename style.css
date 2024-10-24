@@ -486,14 +486,14 @@ input[type=range]::-moz-range-thumb {
 @keyframes BorderTopFadeInUp {
     0% {
         opacity: 1;
-        border-top: 0px solid white;
+        border-top: 0px solid rgba(255, 255, 255, 0.5);
         z-index: 0;
     }
     10% {
         z-index: 100;
     }
     100% {
-        border-top: 42px solid white;
+        border-top: 42px solid rgba(255, 255, 255, 0.5);
         opacity: 1;
         z-index: 100;
     }
@@ -502,11 +502,11 @@ input[type=range]::-moz-range-thumb {
 @keyframes BorderTopFadeOutDown {
     0% {
         opacity: 1;
-        border-top: 42px solid white;
+        border-top: 42px solid rgba(255, 255, 255, 0.5);
         z-index: 100;
     }
     100% {
-        border-top: 0px solid white;
+        border-top: 0px solid rgba(255, 255, 255, 0.5);
         opacity: 1;
         z-index: 0;
     }

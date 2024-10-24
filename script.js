@@ -556,27 +556,39 @@ function returnToAvailable(player, team, index) {
     updateTeam('B', currentTeamB);
 }
 
-function takeScreenshot() {
-    document.getElementById('screenshotBtn').addEventListener('click', function() {
+async function takeScreenshot() {
+    const screenshotBtn = document.getElementById('screenshotBtn');
+    
+    screenshotBtn.addEventListener('click', async function() {
         const teamWrapper = document.querySelector('.team-wrapper');
-    
-        html2canvas(teamWrapper, {
-            backgroundColor: null,
-            useCORS: true
-        }).then(function(canvas) {
-            canvas.toBlob(function(blob) {
-                if (navigator.clipboard && navigator.clipboard.write) {
-                    const item = new ClipboardItem({'image/png': blob});
-                    navigator.clipboard.write([item]).then(function() {
-                        console.log('The screenshot with the background has been successfully copied to the clipboard!');
-                    }).catch(function(err) {
-                        console.error('Error copying screenshot: ', err);
-                    });
-                } else {
-                    console.error('Clipboard API is not supported in this browser.');
-                }
+
+        try {
+            const canvas = await html2canvas(teamWrapper, {
+                backgroundColor: null,
+                useCORS: true
             });
-        });
+            
+            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+
+            // Копирование в буфер обмена (если поддерживается)
+            if (navigator.clipboard && navigator.clipboard.write) {
+                const item = new ClipboardItem({ 'image/png': blob });
+                try {
+                    await navigator.clipboard.write([item]);
+                    console.log('Screenshot copied to clipboard successfully!');
+                } catch (err) {
+                    console.error('Error copying screenshot to clipboard: ', err);
+                }
+            } else {
+                console.warn('Clipboard API is not supported. Offering to download instead.');
+                // Сохранение файла, если буфер обмена не поддерживается
+                const downloadLink = document.createElement('a');
+                downloadLink.href = URL.createObjectURL(blob);
+                downloadLink.download = 'screenshot.png';
+                downloadLink.click();
+            }
+        } catch (err) {
+            console.error('Error taking screenshot: ', err);
+        }
     });
-    
 }

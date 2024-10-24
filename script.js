@@ -266,7 +266,7 @@ function addToTeam(player, index) {
     updateTeam('A', currentTeamA);
     updateTeam('B', currentTeamB);
     sortTeamsByKD();
-    onHover()
+    // onHover()
     
 }
 
@@ -318,7 +318,7 @@ function switchPlayerTeam(currentTeam, oppositeTeam, index) {
     updateTeam(currentTeam, currentTeamArray);
     updateTeam(oppositeTeam, oppositeTeamArray);
     sortTeamsByKD()
-    onHover()
+    // onHover()
 }
 
 function rerollTeams() {
@@ -475,13 +475,15 @@ function updateTeam(team, teamArray, previousTeamArray = []) {
         teamDiv.appendChild(emptySlot);
     }
 
-    // const avgKDTrials = teamArray.length ? (totalKDTrials / teamArray.length).toFixed(2) : '0.00';
-    // const avgKDCrucible = teamArray.length ? (totalKDCrucible / teamArray.length).toFixed(2) : '0.00';
 
-    // document.getElementById(`avgKDTrials${team}`).innerText = avgKDTrials;
-    // document.getElementById(`avgKDCrucible${team}`).innerText = avgKDCrucible;
+    const avgKDTrials = teamArray.length ? (totalKDTrials / teamArray.length).toFixed(2) : '0.00';
+    const avgKDCrucible = teamArray.length ? (totalKDCrucible / teamArray.length).toFixed(2) : '0.00';
+
+    document.getElementById(`avgKDTrials${team}`).innerText = avgKDTrials;
+    document.getElementById(`avgKDCrucible${team}`).innerText = avgKDCrucible;
 
     updateKDDifference();
+    onHover();
 }
 
 
@@ -576,6 +578,7 @@ function createPlayerCard(player, index, inTeam = false, team = '', oppositeTeam
     setTimeout(() => {
         playerCard.classList.remove('anim-none');
     }, animationDuration);
+    onHover()
 
     return playerCard;
 }
@@ -617,4 +620,4 @@ function takeScreenshot() {
     
 }
 
-onHover()
+// onHover()

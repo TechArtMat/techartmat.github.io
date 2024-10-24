@@ -10,35 +10,6 @@ let lockedPlayers = new Set();
 
 importPlayers()
 
-// function onHover(){
-//     // Получаем все карточки
-// const playerCards = document.querySelectorAll('.player-card');
-
-// playerCards.forEach((card) => {
-//   card.addEventListener('mouseenter', () => {
-//     card.classList.add('hovered');
-
-//     const afterElement = card.querySelector('::after');
-//     const beforeElement = card.querySelector('::before');
-
-//     card.addEventListener('animationend', (event) => {
-//       if (event.animationName === 'fadeOutDown') {
-//         card.classList.remove('hovered');
-//       }
-//     });
-    
-//     card.addEventListener('animationend', (event) => {
-//       if (event.animationName === 'BorderfadeOutDown') {
-//         card.classList.remove('hovered');
-//     });
-//   });
-
-//   card.addEventListener('mouseleave', () => {
-//     card.classList.remove('hovered');
-//   });
-// });
-// }
-
 document.addEventListener('contextmenu', function(event) {
     event.preventDefault();
     

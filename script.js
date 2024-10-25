@@ -10,26 +10,41 @@ let lockedPlayers = new Set();
 
 importPlayers()
 
-document.addEventListener('contextmenu', function(event) {
-    event.preventDefault();
-    
-    const playerCard = event.target.closest('.player-card');
-    if (playerCard) {
-        currentContextPlayer = playerCard;
-        const playerName = playerCard.querySelector('.player-name').innerText;
-        
-        const lockButton = document.getElementById('lockPlayerBtn');
-        if (lockedPlayers.has(playerName)) {
-            lockButton.innerText = 'Unlock';
-        } else {
-            lockButton.innerText = 'Lock';
-        }
+document.querySelectorAll('.tools-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const closestDec = button.closest('.tools-btn-container').querySelector('.radio-btn-dec');
 
-        showContextMenu(event.pageX, event.pageY);
-    } else {
-        hideContextMenu();
-    }
+        closestDec.classList.remove('BorderTopFadeInUp', 'BorderTopFadeOutDown');
+
+        closestDec.classList.add('BorderTopFadeInUp');
+
+        setTimeout(() => {
+            closestDec.classList.remove('BorderTopFadeInUp');
+            closestDec.classList.add('BorderTopFadeOutDown');
+        }, 250);
+    });
 });
+
+// document.addEventListener('contextmenu', function(event) {
+//     event.preventDefault();
+    
+//     const playerCard = event.target.closest('.player-card');
+//     if (playerCard) {
+//         currentContextPlayer = playerCard;
+//         const playerName = playerCard.querySelector('.player-name').innerText;
+        
+//         const lockButton = document.getElementById('lockPlayerBtn');
+//         if (lockedPlayers.has(playerName)) {
+//             lockButton.innerText = 'Unlock';
+//         } else {
+//             lockButton.innerText = 'Lock';
+//         }
+
+//         showContextMenu(event.pageX, event.pageY);
+//     } else {
+//         hideContextMenu();
+//     }
+// });
 
 function showContextMenu(x, y) {
     const menu = document.getElementById('contextMenu');
@@ -190,7 +205,7 @@ function filterAvailablePlayers() {
 }
 
 function addToTeam(player, index) {
-    // getPlayerCrucibleTime(player.name); // Получение времени в Горниле для игрока
+    // getPlayerCrucibleTime(player.name);
     // console.log(player.name);
     // console.log(encodeURIComponent(player.name));
 
@@ -215,13 +230,8 @@ function clearAnimationOnClick(){
       
         playerCards.forEach(card => {
           card.addEventListener('click', function() {
-            // Удаление анимации только для текущей карточки
             card.classList.remove('hovered');
-            
-            // Принудительное пересчитывание (чтобы сбросить анимацию)
             void card.offsetWidth;
-            
-            // Добавление анимации только на эту карточку
             card.classList.add('hovered');
           });
         });
@@ -314,22 +324,21 @@ function rerollTeams() {
     sortTeamsByKD();
     updateTeam('A', currentTeamA, previousTeamA || []);
     updateTeam('B', currentTeamB, previousTeamB || []);
+    
+    /////////
 
-    const teamWrapper = document.querySelector('.team-wrapper');
-
-    // Находим все карточки игроков внутри team-wrapper
-    const playerCards = teamWrapper.querySelectorAll('.player-card');
-
-    // Удаляем класс anim-none у каждой карточки с таймаутом
+    // const teamWrapper = document.querySelector('.team-wrapper');
+    // const playerCards = teamWrapper.querySelectorAll('.player-card');
  
-    playerCards.forEach((card) => {
-        card.addEventListener('animationend', () => {
-            setTimeout(() => {
-                card.classList.remove('anim-none'); // Убираем класс, когда анимация закончена
-            }, 100)
-        });
-    })
-    // onHover()
+    // playerCards.forEach((card) => {
+    //     card.addEventListener('animationend', () => {
+    //         setTimeout(() => {
+    //             card.classList.remove('anim-none');
+    //         }, 200)
+    //     });
+    // })
+
+    /////////
 }
 
 function lockedPlayersInTeam(team) {
@@ -404,19 +413,43 @@ function updateTeam(team, teamArray, previousTeamArray = []) {
             playerCard.style.backgroundColor = '';
         }
 
-        if (playerMoved) {
-            playerCard.classList.add('border-fade-in');
-            
-            setTimeout(() => {
-                playerCard.classList.remove('border-fade-in');
-                playerCard.classList.add('border-fade-out');
+        const playerDecorations = playerCard.querySelectorAll('.player-decoration');
+        const lastPlayerDecoration = playerDecorations[playerDecorations.length - 1];
+    
+        const switchButton = playerCard.querySelector('.switch-btn');
+        // switchButton.addEventListener('mouseenter', () => {
+        //     lastPlayerDecoration.style.backgroundColor = 'white';
+        // });
 
-                setTimeout(() => {
-                    playerCard.classList.remove('border-fade-out');
-                    playerCard.classList.add('anim-none');
-                }, 200);
-            }, 400);
-        }
+        setTimeout(() => {
+            switchButton.addEventListener('mouseenter', () => {
+                lastPlayerDecoration.style.backgroundColor = 'white';
+            });
+        }, 300);
+    
+        switchButton.addEventListener('mouseleave', () => {
+            lastPlayerDecoration.style.backgroundColor = 'rgba(53, 53, 53, 0.5)';
+        });
+
+
+
+        /////////
+
+        // if (playerMoved) {
+        //     playerCard.classList.add('border-fade-in');
+            
+        //     setTimeout(() => {
+        //         playerCard.classList.remove('border-fade-in');
+        //         playerCard.classList.add('border-fade-out');
+
+        //         setTimeout(() => {
+        //             playerCard.classList.remove('border-fade-out');
+        //             playerCard.classList.add('anim-none');
+        //         }, 400);
+        //     }, 200);
+        // }
+
+        /////////
         
         teamDiv.appendChild(playerCard);
 
@@ -528,8 +561,8 @@ function createPlayerCard(player, index, inTeam = false, team = '', oppositeTeam
 
         playerCard.onclick = () => returnToAvailable(player, team, index);
     } else {
-        const switchButton = document.createElement('button');
-        switchButton.className = 'switch-btn';
+        const switchButton = document.createElement('div');
+        switchButton.className = 'switch-btn-dummy';
         switchButton.innerHTML = '';
         switchButton.onclick = () => switchPlayerTeam(team, oppositeTeam, index);
         playerCard.appendChild(switchButton);
@@ -570,7 +603,6 @@ async function takeScreenshot() {
             
             const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
 
-            // Копирование в буфер обмена (если поддерживается)
             if (navigator.clipboard && navigator.clipboard.write) {
                 const item = new ClipboardItem({ 'image/png': blob });
                 try {
@@ -581,7 +613,6 @@ async function takeScreenshot() {
                 }
             } else {
                 console.warn('Clipboard API is not supported. Offering to download instead.');
-                // Сохранение файла, если буфер обмена не поддерживается
                 const downloadLink = document.createElement('a');
                 downloadLink.href = URL.createObjectURL(blob);
                 downloadLink.download = 'screenshot.png';

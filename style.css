@@ -17,6 +17,7 @@ body {
     height: 100vh;
     align-items: center;
     position: relative;
+    word-spacing: 1px;
 }
 
 .cursor {
@@ -130,6 +131,11 @@ body {
     margin-top: 4px;
 }
 
+.addPlayer-item, #playerBaseInput, #searchPlayerInput {
+    font-size: 14px;
+
+}
+
 #playerBaseInput, #searchPlayerInput {
     font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
     display: flex;
@@ -240,14 +246,54 @@ body {
 .radio-btn-dec {
     position: absolute;
     display: flex;
-    max-width: 80px;
+    width: 80px;
     max-height: 80px;
-    background-color: red;
+    /* background-color: red; */
+    backdrop-filter: blur(0.5px);
     top: 0px;
-    border: 5px solid blue;
+    border-top: 0px solid rgb(255, 255, 255);
 }
 
-.tools2btn:hover, .addPlayer > button:hover {
+.BorderTopFadeInUp {
+    animation: Tools-Btn_BorderTopFadeInUp 0.1s forwards;
+}
+
+.BorderTopFadeOutDown {
+    animation: Tools-Btn_BorderTopFadeOutDown 0.1s forwards;
+}
+
+@keyframes Tools-Btn_BorderTopFadeInUp {
+    0% {
+        opacity: 1;
+        border-top: 0px solid rgba(255, 255, 255, 0.8);
+        z-index: 0;
+    }
+    10% {
+        /* z-index: 100; */
+    }
+    100% {
+        border-top: 80px solid rgba(255, 255, 255, 0.8);
+        /* border-top: 42px solid rgba(255, 255, 255, 1); */
+        opacity: 1;
+        /* z-index: 100; */
+    }
+}
+
+@keyframes Tools-Btn_BorderTopFadeOutDown {
+    0% {
+        opacity: 1;
+        border-top: 80px solid rgba(255, 255, 255, 0.8);
+        /* border-top: 0px solid rgba(255, 255, 255, 1); */
+        /* z-index: 100; */
+    }
+    100% {
+        border-top: 0px solid rgba(255, 255, 255, 0.8);
+        opacity: 1;
+        z-index: 0;
+    }
+}
+
+.addPlayer > button:hover {
     background-color: #c2c2c2;
 }
 
@@ -287,6 +333,54 @@ body {
     width: 300px;
     position: relative;
 }
+
+#kdDiffSlider {
+    position: relative;
+}
+
+#kdDiffSlider::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    right: -6px;
+    bottom: -6px;
+    opacity: 0;
+    z-index: -1; 
+}
+
+#kdDiffSlider::before {
+    content: '';
+    position: absolute;
+    opacity: 0;
+    z-index: 1; 
+
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+
+    border: 0px solid rgb(255, 0, 0);
+}
+
+#kdDiffSlider:hover::after {
+    animation: fadeInUp 0.3s forwards;
+}
+
+#kdDiffSlider::after {
+    animation: fadeOutDown 0.5s forwards;
+}
+
+#kdDiffSlider:hover::before {
+    animation: BorderFadeInUp 0.06s forwards;
+}
+
+#kdDiffSlider::before {
+    animation: BorderFadeOutDown 0.105s forwards;
+}
+
+
+
 
 input[type=range] {
     -webkit-appearance: none;
@@ -341,7 +435,114 @@ input[type=range]::-moz-range-thumb {
     border: 2px solid black;
     background-color: #A5A5A5;
     cursor: pointer;
+    position: relative;
 }
+
+.tools-btn::after {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    opacity: 0;
+    z-index: -1; 
+}
+
+.tools-btn::before {
+    content: '';
+    position: absolute;
+    opacity: 0;
+    z-index: 1; 
+
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+
+    border: 0px solid rgb(255, 0, 0);
+}
+
+.tools-btn:hover::after {
+    animation: Tools-btn_fadeInUp 0.4s forwards;
+}
+
+.tools-btn::after {
+    animation: Tools-btn_fadeOutDown 0.2s forwards;
+}
+
+.tools-btn:hover::before {
+    animation: Tools-btn_BorderFadeInUp 0.06s forwards;
+}
+
+.tools-btn::before {
+    animation: Tools-btn_BorderFadeOutDown 0.205s forwards;
+}
+
+@keyframes Tools-btn_BorderFadeInUp {
+    0% {
+        opacity: 0;
+        border: 0px solid white;
+    }
+    100% {
+        border: 3px solid white;
+        opacity: 1;
+    }
+}
+
+@keyframes Tools-btn_BorderFadeOutDown {
+    0% {
+        border: 3px solid white;
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        border: 0px solid white;
+    }
+  }
+    
+@keyframes Tools-btn_fadeInUp {
+    0% {
+        opacity: 0;
+        border: 8px solid white;
+        background-color: rgba(92, 92, 92, 0.25);
+        /* transform: scale(1.05, 1.405); */
+    }
+    /* 50% {
+        opacity: 0.2;
+        border: 5px solid white;
+        background-color: rgba(255, 255, 255, 0.25);
+    } */
+    100% {
+        border: 4px solid white;
+        background-color: rgba(255, 255, 255, 0.25);
+        opacity: 1;
+        /* transform: scale(1.005, 1.05); */
+    }
+}
+
+@keyframes Tools-btn_fadeOutDown {
+    0% {
+        border: 4px solid white;
+        background-color: rgba(255, 255, 255, 0.25);
+        opacity: 1;
+        /* transform: scale(1.0, 1.0); */
+    }
+    /* 50% {
+        opacity: 0.01;
+        border: 5px solid white;
+        background-color: rgba(255, 255, 255, 0.25);
+        transform: scale(1.025, 1.205);
+    } */
+    100% {
+        opacity: 0;
+        border: 0px solid white;
+        background-color: rgba(92, 92, 92, 0.25);
+        transform: scale(0, 0);
+
+    }
+  }
+
 
 #btnTrials, #btnCrucible {
     background-repeat: no-repeat;
@@ -476,11 +677,11 @@ input[type=range]::-moz-range-thumb {
 }
 
 .animate-border-fade-in::before {
-    animation: BorderTopFadeInUp 0.05s forwards;
+    animation: FadeInUp 0.105s forwards;
 }
 
 .animate-border-fade-out::before {
-    animation: BorderTopFadeOutDown 0.5s forwards;
+    animation: FadeOutDown 0.1s forwards;
 }
 
 @keyframes BorderTopFadeInUp {
@@ -493,7 +694,8 @@ input[type=range]::-moz-range-thumb {
         z-index: 100;
     }
     100% {
-        border-top: 42px solid rgba(255, 255, 255, 0.5);
+        border-top: 0px solid rgba(255, 255, 255, 0.5);
+        /* border-top: 42px solid rgba(255, 255, 255, 0.5); */
         opacity: 1;
         z-index: 100;
     }
@@ -502,7 +704,8 @@ input[type=range]::-moz-range-thumb {
 @keyframes BorderTopFadeOutDown {
     0% {
         opacity: 1;
-        border-top: 42px solid rgba(255, 255, 255, 0.5);
+        /* border-top: 42px solid rgba(255, 255, 255, 0.5); */
+        border-top: 0px solid rgba(255, 255, 255, 0.5);
         z-index: 100;
     }
     100% {
@@ -752,7 +955,23 @@ input[type=range]::-moz-range-thumb {
     z-index: 1;
 }
 
+.switch-btn-dummy {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #555;
+    cursor: pointer;
+    font-weight: bold;
+    height: 40px;
+    width: 40px;
+    overflow: visible;
+    z-index: 1;
+}
+
+
+
 .switch-btn:hover {
     color: #333;
     background-color: rgba(255, 255, 255, 0.25);
+    /* border-left: 2px solid white; */
 }
